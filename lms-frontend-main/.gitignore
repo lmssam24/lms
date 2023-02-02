@@ -1,0 +1,6 @@
+node_modules
+.next
+.n*
+.next/*
+next/cache
+build
