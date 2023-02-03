@@ -53,8 +53,9 @@ const ViewRecordings = () => {
           url={link}
           className="react-player"
           controls
-          width="100%"
-          height="100%"
+          max-width="10vw"
+          min-width="5vw"
+          // height="100%"
         />
       </>
     );
@@ -85,11 +86,11 @@ const ViewRecordings = () => {
         <div class="row">
           {listOfVideo.map((e, i) => (
             <>
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column justify-content-between mx-auto ">
                 <div class="col-6 mt-5">{settingOfReactPlayer(e.video_link)} </div>
                 {/* <br /> */}
-                <div className="text-center text-bold col-6">
-                  <strong>{e.name}</strong>
+                <div className="text-center text-bold col-6 mx-auto my-4">
+                  <strong className="text-nowrap">{e.name}</strong>
                   <br />
                   <a onClick={() => deleteVideo(e.id)}>
                     <strong>❌</strong>
