@@ -1,45 +1,43 @@
-from django.shortcuts import render, get_object_or_404
-from core_app.vimeo_interface import generate_upload_link, change_video_meta
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
-from core_app.serializers import *
-from core_app.models import *
-from django.contrib.auth import get_user_model
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.viewsets import ModelViewSet
-# from django.http import JsonResponse
-from django.contrib.auth import authenticate
-import requests
 # from generate_token import generate_token
 import json
-from datetime import datetime as dt
-from django.conf import settings
+import mimetypes
+import os
+import tempfile
 # import jwt
 import time
-from django_zoom_meetings import ZoomMeetings
-from .generate_token import *
-from django.core import serializers
-from LMS.utilization import html_send_mail
-from django.core.files.storage import FileSystemStorage
-import os
-from django.db.models import F
+from datetime import datetime as dt
+
+import requests
 from core_app.aws_interface import *
-from core_app.recordings import download_recording, get_meeting_recording, get_meeting_attendance
+from core_app.models import *
+from core_app.recordings import (download_recording, get_meeting_attendance,
+                                 get_meeting_recording)
+from core_app.serializers import *
+from core_app.vimeo_interface import change_video_meta, generate_upload_link
 from core_app.zoom_interface import get_video_by_id
-import tempfile
-import mimetypes
+from django.conf import settings
+# from django.http import JsonResponse
+from django.contrib.auth import authenticate, get_user_model
+from django.core import serializers
+from django.core.files.storage import FileSystemStorage
+from django.db.models import F
+from django.http.request import HttpRequest
 from django.http.response import HttpResponse
-
+from django.shortcuts import get_object_or_404, render
 from django.utils.timezone import now
-
-
+from django_filters.rest_framework import DjangoFilterBackend
+from django_zoom_meetings import ZoomMeetings
+from LMS.utilization import html_send_mail
+from rest_framework import filters, status
 from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from .generate_token import *
 
 # https://github.com/JoeyAlpha5/django-zoom-meetings
 
@@ -1053,7 +1051,7 @@ class StudentModuleMaterialList(APIView):
                 module_material = ModuleMaterial.objects.filter(module__in=list(Module.objects.filter(
                     course__in=list(Course.objects.filter(is_deleted=False, id__in=list(StudentCourse.objects.filter(student=stu.id).values_list("course", flat=True))).values_list("id", flat=True)))))
             except Exception:
-                if request.user.is_staff:
+                if request.user.is_superuser:
                     module_material = ModuleMaterial.objects.filter(module__in=list(
                         Module.objects.filter(is_deleted=False)))
                 else:
@@ -1660,3 +1658,21 @@ class TakeAllStudentsAttendance(APIView):
                 return Response({"message": "Status Updated", "data": serializer.data}, status=200)
             except StudentCourse.DoesNotExist:
                 return Response({"message": "Invalid course"}, status=400)
+
+
+class DeleteModuleMaterial(APIView):
+    def delete(self, request: HttpRequest):
+        material_url = request.GET["material_url"]
+        try:
+            moduleMat = ModuleMaterial.objects.get(material_url=material_url)
+            print(moduleMat)
+            r = delete_assessment_file(moduleMat.material_url)
+            print(r)
+            if r is not False:
+                moduleMat.delete()
+                return Response(data="Deleted Successfully", status=status.HTTP_200_OK)
+            else:
+                return Response(data="Not deleted", status=status.HTTP_400_BAD_REQUEST)
+
+        except ModuleMaterial.DoesNotExist:
+            return Response(data="Not found", status=status.HTTP_400_BAD_REQUEST)

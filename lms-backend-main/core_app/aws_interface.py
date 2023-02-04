@@ -1,9 +1,9 @@
 import codecs
-import boto3
 import os
+
+import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
 from django.conf import settings
-
 
 ACCESS_KEY = settings.AWS_KEY
 SECRET_KEY = settings.AWS_SEC
@@ -110,6 +110,18 @@ def download_assessment_file(path, bucket_name=AWS_BUCKET):
         # print(response)
         # contents = response['Body'].read()
         # print(contents.decode("utf-8"))
+    except ClientError as e:
+        print("Error", e)
+        return False
+
+
+def delete_assessment_file(path, bucket_name=AWS_BUCKET):
+    s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY,
+                      aws_secret_access_key=SECRET_KEY)
+
+    try:
+        response = s3.delete_object(Bucket=bucket_name, Key=path)
+        return response
     except ClientError as e:
         print("Error", e)
         return False

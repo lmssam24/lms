@@ -1,5 +1,5 @@
-from django.urls import path, include
 from core_app.views import *
+from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers
 
@@ -54,6 +54,8 @@ urlpatterns = [
 
     path("upload_module_material/<str:module_id>",
          ModuleMatrialFileUpload.as_view(), name="module_post_by_id"),
+    path("delete_module_material",
+         DeleteModuleMaterial.as_view(), name="module_material_del_by_id"),
     path("get_module_material/<str:module_id>",
          ModuleMatrialFileUpload.as_view(), name="module_get_by_id"),
     path("student_module_material_list",
