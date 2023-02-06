@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import Modal from "../src/components/modal/Modal";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import Form from "react-bootstrap/Form";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuid } from "uuid";
-import FacultyService from "./api/faculty.service";
+import Modal from "../src/components/modal/Modal";
 import AdminService from "./api/admin.service";
 import api from "./api/api";
+import FacultyService from "./api/faculty.service";
 
 const initialSlotDetails = {
   startDate: "",
@@ -121,7 +121,9 @@ function EditCourseDetails(props) {
     language: props.course?.language,
     batch: props.course ? props.course?.batch : "",
     module: props.course?.module,
-    category: props.course?.category
+    category: props.course?.category,
+    meeting_link: props.course?.meeting_link,
+    meeting_pwd: props.course?.meeting_pwd
   });
   const [pointsList, setPointsList] = useState({});
   function getImgSrc(src) {
@@ -708,6 +710,26 @@ function EditCourseDetails(props) {
                 <img width={100} height={100} src={selectedFile2 ? preview2 : getImgSrc(preview2)} />
               </Col>
             </Form.Group>
+            
+            <Form.Group as={Row} controlId="formPlaintextSub">
+              <Form.Label column sm="2">
+                Meeting Link
+              </Form.Label>
+              <Col sm="5">
+                <Form.Control value={courseDetails.meeting_link} name="meeting_link" type="text" placeholder="Meeting Link" onChange={(e) => handleFormBuilder(e)} />
+              </Col>
+            </Form.Group>
+
+
+            <Form.Group as={Row} controlId="formPlaintextSub">
+              <Form.Label column sm="2">
+                Meeting Passcode 
+              </Form.Label>
+              <Col sm="5">
+                <Form.Control value={courseDetails.meeting_pwd} name="meeting_pwd" type="text" placeholder="Meeting Passcode" onChange={(e) => handleFormBuilder(e)} />
+              </Col>
+            </Form.Group>
+
             {/* <Form.Group as={Row} controlId="formPlaintextthumb">
                             <Form.Label column sm="2">
                                 Video Thumbnail/url

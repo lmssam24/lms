@@ -1,9 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import User
-
 import uuid
-from django.db.models import JSONField
+
 from core_app.models import Course, CourseCategory, Teacher
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import JSONField
 
 # Create your models here.
 
@@ -71,6 +71,8 @@ class CourseDetails(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    meeting_link = models.URLField(null=True)
+    meeting_pwd = models.CharField(max_length=256, null=True)
 
     class Meta:
         db_table = 'course_details'

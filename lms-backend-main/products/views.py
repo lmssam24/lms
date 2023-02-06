@@ -1,15 +1,16 @@
 import time
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from LMS import settings
+
 from core_app.aws_interface import get_assessment_files, upload_assessment_file
-from core_app.serializers import CourseSerializerList
 from core_app.models import Student, StudentCourse
+from core_app.serializers import CourseSerializerList
+from django.shortcuts import render
+from LMS import settings
 from products.models import CourseDetails
 from products.serializers import *
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 
@@ -19,7 +20,7 @@ class GetCourseDetails(APIView):
         if category_id is None:
             course_details = CourseDetails.objects.filter(is_deleted=False)
             serializer = CourseDetailsGet(course_details, many=True)
-            
+
             return Response({"message": "Success", "data": serializer.data}, status=200)
         else:
             try:
