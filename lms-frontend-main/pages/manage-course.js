@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import Modal from "../src/components/modal/Modal";
-import "react-toastify/dist/ReactToastify.css";
-import Form from "react-bootstrap/Form";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
+import Form from "react-bootstrap/Form";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuid } from "uuid";
-import FacultyService from "./api/faculty.service";
+import Modal from "../src/components/modal/Modal";
 import AdminService from "./api/admin.service";
+import FacultyService from "./api/faculty.service";
 
 const initialSlotDetails = {
   startDate: "",
@@ -82,7 +82,9 @@ function AddCourseDetails(props) {
     price: "",
     language: "",
     batch: "",
-    module: ""
+    module: "",
+    meeting_link:"",
+    meeting_pwd: ""
   });
   const [pointsList, setPointsList] = useState({});
 
@@ -664,6 +666,27 @@ function AddCourseDetails(props) {
                 <Form.Control name="subject" type="text" placeholder="Subject of Course" onChange={(e) => handleFormBuilder(e)} />
               </Col>
             </Form.Group>
+
+
+            <Form.Group as={Row} controlId="formPlaintextSub">
+              <Form.Label column sm="2">
+                Meeting Link
+              </Form.Label>
+              <Col sm="5">
+                <Form.Control name="meeting_link" type="text" placeholder="Meeting Link" onChange={(e) => handleFormBuilder(e)} />
+              </Col>
+            </Form.Group>
+
+
+            <Form.Group as={Row} controlId="formPlaintextSub">
+              <Form.Label column sm="2">
+                Meeting Passcode 
+              </Form.Label>
+              <Col sm="5">
+                <Form.Control name="meeting_pwd" type="text" placeholder="Meeting Passcode" onChange={(e) => handleFormBuilder(e)} />
+              </Col>
+            </Form.Group>
+
 
             <Form.Group as={Row} controlId="formPlaintextlang">
               <Form.Label column sm="2">

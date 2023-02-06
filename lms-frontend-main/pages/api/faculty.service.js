@@ -78,6 +78,16 @@ const updateModule = (moduleData, id) => {
       return error.response;
     });
 };
+const deleteMaterial = (mat_url) => {
+  return api
+    .delete("/delete_module_material?material_url=" + mat_url)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+};
 
 const deleteCourse = (id) => {
   return api
@@ -475,7 +485,8 @@ const FacultyService = {
   addModuleQuiz,
   updateModuleQuiz,
   generateVideoUploadLink,
-  deleteVideos
+  deleteVideos,
+  deleteMaterial,
 };
 
 export default FacultyService;
