@@ -1,13 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import FacLayout from "./faculty";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminService from "./api/admin.service";
 import FacultyService from "./api/faculty.service";
-import { useRouter } from "next/router";
+import FacLayout from "./faculty";
 
 const Attendance = () => {
   const [showModal, setShowModal] = useState(false);
@@ -41,6 +39,7 @@ const Attendance = () => {
     }
 
     setStudentsAttend(data);
+    console.log(data);
   };
 
   const fn = async () => {

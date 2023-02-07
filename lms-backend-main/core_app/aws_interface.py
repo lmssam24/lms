@@ -121,10 +121,10 @@ def delete_assessment_file(path, bucket_name=AWS_BUCKET):
 
     try:
         response = s3.delete_object(Bucket=bucket_name, Key=path)
-        return response
     except ClientError as e:
         print("Error", e)
         return False
+    return True
 
 
 def upload_to_s3(local_file, s3_file, bucket=AWS_BUCKET):
