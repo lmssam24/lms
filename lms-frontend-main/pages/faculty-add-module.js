@@ -99,6 +99,7 @@ const AddModule = () => {
     // Your code here
     FacultyService.listCourse().then((res) => {
       if (res && res.data && res.data.data) {
+        // console.log(res.data.data, "res.data.data res.data.data");
         setCourseList(res.data.data);
       }
     });
@@ -201,7 +202,6 @@ const AddModule = () => {
           });
         setIsupdate(false);
       } else if (isDelete) {
-        console.log("dlete", isDelete);
         FacultyService.deleteModule(id)
           .then((res) => {
             if (res.status == 204) {
@@ -469,28 +469,54 @@ const AddModule = () => {
     function Content() {
       const [module, setModule] = useState("");
       const [moduleMaterial, setModuleMaterial] = useState("");
+      const [course, SetCourse] = useState("");
+      const [moduleListForUpload, setModuleListForUpload] = useState([]);
       // const baseUrl = api.defaults.baseURL +"/material?key="+ props.urlKey;
       // console.log("baseUrl", baseUrl)
       function handleChangeModule(e) {
         if (e && e.target.value) setModule(e.target.value);
       }
+
+      function handleChangeCourse(e) {
+        if (e && e.target.value) SetCourse(e.target.value);
+      }
+
       function handleChangeFile(e) {
         if (e && e.target.files && e.target.files[0]) setModuleMaterial(e.target.files[0]);
       }
+      if (course) {
+        FacultyService.getModules(course).then((res) => {
+          if (res && res.data) {
+            setModuleListForUpload(res.data);
+          }
+        });
+      }
+
+      let module_List_upload = [];
+      if (moduleListForUpload) {
+        moduleListForUpload.forEach((element) => {
+          module_List_upload.push(
+            <option key={element.id} value={element.id}>
+              {element.title}
+            </option>
+          );
+        });
+      }
+
       function uploadMM() {
-        // console.log("module", module)
         let formData = new FormData();
+
         formData.append("file", moduleMaterial);
         let md = {
           module_id: module,
           formdata: formData
         };
+
         FacultyService.uploadModule(md)
           .then((res) => {
             setShowGenericModuModal(false);
             if (res && res.status === 200) {
               toast.success("Success: Module Material Uploaded");
-
               return (
                 <>
                   <ModuleMaterialsView />
@@ -514,6 +540,17 @@ const AddModule = () => {
       return (
         <>
           <div className="form-group row">
+            <label className="col-sm-3 col-form-label form-label">Select Course</label>
+            <div className="col-sm-9 col-md-9">
+              <select id="select_Module" name="select_Module" onChange={handleChangeCourse} className="form-select">
+                <option value="">Select Course</option>
+                {course_List}
+              </select>
+            </div>
+          </div>
+          {/* value={module} */}
+
+          <div className="form-group row">
             {/* <label for="quiz_desc" className="col-sm-2 col-form-label form-label">Video URL:</label>
                                     <div className="col-sm-4 col-md-4">
                                         <input id="quiz_vid" type="text" className="form-control" placeholder="Video URL" />
@@ -522,7 +559,7 @@ const AddModule = () => {
             <div className="col-sm-9 col-md-9">
               <select id="select_Module" name="select_Module" value={module} onChange={handleChangeModule} className="form-select">
                 <option value="">Select Module</option>
-                {module_List_}
+                {module_List_upload}
               </select>
             </div>
           </div>

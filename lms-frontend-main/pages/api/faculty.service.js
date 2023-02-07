@@ -486,7 +486,7 @@ const FacultyService = {
   updateModuleQuiz,
   generateVideoUploadLink,
   deleteVideos,
-  deleteMaterial,
+  deleteMaterial
 };
 
 export default FacultyService;
