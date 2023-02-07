@@ -20,6 +20,7 @@ function FacLayout({ children }) {
   ];
   const router = useRouter();
 
+  
   useEffect(() => {
     // Perform localStorage action
     const token = TokenService.getLocalAccessToken();

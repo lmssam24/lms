@@ -1663,12 +1663,13 @@ class TakeAllStudentsAttendance(APIView):
 class DeleteModuleMaterial(APIView):
     def delete(self, request: HttpRequest):
         material_url = request.GET["material_url"]
+
         try:
             moduleMat = ModuleMaterial.objects.get(material_url=material_url)
             print(moduleMat)
             r = delete_assessment_file(moduleMat.material_url)
             print(r)
-            if r is not False:
+            if r:
                 moduleMat.delete()
                 return Response(data="Deleted Successfully", status=status.HTTP_200_OK)
             else:
