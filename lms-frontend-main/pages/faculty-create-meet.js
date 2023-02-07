@@ -12,7 +12,7 @@ const CreateMeet = () => {
 
   useEffect(() => {
     FacultyService.listCourse().then((res) => {
-      setCourseList(res.data.data);
+      setCourseList(res?.data?.data);
     });
   }, []);
 
