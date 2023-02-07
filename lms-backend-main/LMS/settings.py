@@ -257,7 +257,7 @@ S3_LINK = os.environ.get('S3_LINK')
 # AWS_SEC="FZFTIAWHgO2qePQu3S6AlBmGUl9B9DDG+SU9KBEN"
 # prodution
 # BUCKET_NAME = "sambodhieducationnestss3"
-BUCKET_NAME="sambodhieducationnestss3"
+BUCKET_NAME = "sambodhieducationnestss3"
 
 S3_LINK = "https://lms-utilitie-bucket.s3.ap-south-1.amazonaws.com/"
 
