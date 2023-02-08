@@ -40,8 +40,8 @@ const StudentsClassRecordings = () => {
           config={{
             file: { attributes: { controlsList: "nodownload" } },
             vimeo: {
-              preload: true,
-            },
+              preload: true
+            }
           }}
           onContextMenu={(e) => e.preventDefault()}
           url={link}

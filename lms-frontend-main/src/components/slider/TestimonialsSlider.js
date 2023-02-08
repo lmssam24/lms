@@ -57,7 +57,7 @@ export default class TestimonialsSlider extends Component {
           <div className="work-step-item">
             <span className="number ">✨</span>
             <div className="content">
-              <h4>Abhinav Pandey </h4> <br /> <span>Associate Sector Lead- HCL Foundation</span>
+              <h4>Abhinav Pandey </h4> <br /> <strong style={{ position: "relative", bottom: "45px" }}>Associate Sector Lead- HCL Foundation</strong>
               <p>
                 This training course is beyond my expectations. These tools and methodology & principals have opened my eyes on how to be effective and ethical! Honestly saying I wanted to be a Researcher but, due to lack of knowledge and guidance it
                 was difficult for me (I was thinking) but, after attending the course I really at least found my path that how I have to start. Thanks Sambodhi and their amazing teacher/ trainer(s). Looking forward to putting all those learning
@@ -69,7 +69,7 @@ export default class TestimonialsSlider extends Component {
             <span className="number">✨</span>
             <div className="content">
               <h4>Hashir P.V </h4> <br />
-              <span>Centre For Research In Schemes And Policies</span>
+              <strong style={{ position: "relative", bottom: "45px" }}>Centre For Research In Schemes And Policies</strong>
               <p>
                 MEL4DP Program has immensely helped me in getting a clarity on MEL through a clear practical lens. The course taught me various aspects of MEL practice and theory and dashboard making by drawing examples from different case studies. I
                 strongly recommend this course to the beginner and mid-level professionals interested in monitoring and evaluation. A big thank you to Sambodhi and my mentors for providing me a scholarship to pursue this course.
@@ -81,7 +81,7 @@ export default class TestimonialsSlider extends Component {
             <div className="content">
               <h4>Abha</h4>
               <br />
-              <span>Senior Research Manager- Sambodhi</span>
+              <strong style={{ position: "relative", bottom: "45px" }}>Senior Research Manager- Sambodhi</strong>
               <p>
                 I have been a development practitioner since last six years. Working at the grassroots in Pradan developed a sense of understanding of real challenges and opportunities to work with the rural communities. I however felt the need to
                 understand the "change" that's coming by the immense work we all were doing. I switched my career to M&E in sambodhi. We were offered a course that was so deep yet easy to understand the gist, was a bliss to a professional like me
