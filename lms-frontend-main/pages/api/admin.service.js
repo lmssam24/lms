@@ -65,6 +65,17 @@ const getCourseDetails = (category_id) => {
     });
 };
 
+const getCourseDetailsById = (course_id) => {
+  return api
+    .get("/course_details?course_id=" + course_id)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 const getTeachers = () => {
   return api
     .get("/teacher")
@@ -131,7 +142,8 @@ const AdminService = {
   deleteCourseDetails,
   getAttendance,
   updateAttendance,
-  addAttendance
+  addAttendance,
+  getCourseDetailsById
 };
 
 export default AdminService;

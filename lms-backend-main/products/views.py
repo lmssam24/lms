@@ -17,7 +17,19 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class GetCourseDetails(APIView):
     def get(self, request, category_id=None):
-        if category_id is None:
+        course_id = None
+        if 'course_id' in request.GET:
+            course_id = request.GET['course_id']
+            print(course_id)
+        if course_id:
+            try:
+                course_detail = CourseDetails.objects.filter(
+                    course=course_id, is_deleted=False)
+                serializer = CourseDetailsGet(course_detail, many=True)
+                return Response({"message": "Success", "data": serializer.data}, status=200)
+            except CourseDetails.DoesNotExist:
+                return Response({"message": "Invalid category"}, status=400)
+        elif category_id is None:
             course_details = CourseDetails.objects.filter(is_deleted=False)
             serializer = CourseDetailsGet(course_details, many=True)
 
