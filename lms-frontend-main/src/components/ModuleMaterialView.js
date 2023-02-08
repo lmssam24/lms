@@ -5,20 +5,29 @@ import api from "../../pages/api/api";
 import FacultyService from "../../pages/api/faculty.service";
 import StudentService from "../../pages/api/student.service";
 import GenericModal from "./GenericModal";
+import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ModuleMaterialsView() {
+function ModuleMaterialsView({ upload }) {
   const [showModal, setShowModal] = useState(false);
   const [docKey, setDocKey] = useState(null);
   const [moduleMaterials, setModuleMaterials] = useState([]);
   const [deleted, setDeleted] = useState(false);
+  const [spinner, setSpinner] = useState(false);
   function handleDocClick(mKey) {
     setDocKey(mKey);
     setShowModal(true);
   }
 
   useEffect(() => {
+    console.log(upload, "uploadddddd");
+    if (upload) {
+      setSpinner(false);
+    } else if (!upload) {
+      setSpinner(true);
+    }
+
     const chunk = 4;
     StudentService.listModuleMaterial().then((res) => {
       if (res && res.status === 200) {
@@ -35,22 +44,32 @@ function ModuleMaterialsView() {
       allChunks.push(chunkArray);
     }
 
-    console.log(allChunks, "balajee mishraaa");
-
     if (type === "materials") {
       if (ent === "module") {
         setModuleMaterials(allChunks);
+        setSpinner(false);
       }
     }
   }
 
   return (
     <>
-      {moduleMaterials.length === 0 && <label className="col-form-label form-label"> Looks like Module Materials list is empty, start adding Module Material</label>}
-      {moduleMaterials.length > 0 &&
-        moduleMaterials.map((uris, index) => {
-          return <CardViewDoc materials={uris} key={"key" + index} />;
-        })}
+      {!spinner && (
+        <>
+          {moduleMaterials.length === 0 && <label className="col-form-label form-label"> Looks like Module Materials list is empty, start adding Module Material</label>}
+          {moduleMaterials.length > 0 &&
+            moduleMaterials.map((uris, index) => {
+              return <CardViewDoc materials={uris} key={"key" + index} />;
+            })}
+        </>
+      )}
+
+      {spinner && (
+        <>
+          <h5>Please wait while data is loading.</h5>
+          <ClipLoader color="#36d7b7" size={50} />
+        </>
+      )}
     </>
   );
 

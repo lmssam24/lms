@@ -605,7 +605,9 @@ const AddModule = () => {
           </button>
         </div>
         {showGenericModuModal && <GenericModal xl={false} hideClose={true} setShowModal={setShowGenericModuModal} showModal={showGenericModuModal} header={"Module Material"} content={<Content />} />}
-        <ModuleMaterialsView />
+        {!showGenericModuModal && <ModuleMaterialsView />}
+        {showGenericModuModal && <ModuleMaterialsView upload="1" />}
+
         {/* materials={moduleMaterials} */}
       </div>
     );
