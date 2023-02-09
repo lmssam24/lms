@@ -1,23 +1,23 @@
-import FacLayout from "./faculty";
-import { useState, useEffect } from "react";
-import Modal from "../src/components/modal/Modal";
-import FacultyService from "./api/faculty.service";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
+import Accordion from "react-bootstrap/esm/Accordion";
+import Card from "react-bootstrap/esm/Card";
 import Form from "react-bootstrap/Form";
-import TabLayout from "../src/components/Tabs";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CourseMaterialsView from "../src/components/CourseMaterialsView";
 import GenericModal from "../src/components/GenericModal";
-import StudentService from "./api/student.service";
-import Card from "react-bootstrap/esm/Card";
-import Accordion from "react-bootstrap/esm/Accordion";
+import Modal from "../src/components/modal/Modal";
 import ModuleMaterialsView from "../src/components/ModuleMaterialView";
+import TabLayout from "../src/components/Tabs";
+import FacultyService from "./api/faculty.service";
+import StudentService from "./api/student.service";
+import FacLayout from "./faculty";
 
 const initialState = {
   course_title: "",
   description: "",
   course_id: "",
-  course_material: ""
+  course_material: "",
 };
 
 const AddModule = () => {
@@ -33,7 +33,7 @@ const AddModule = () => {
     description: "",
     course_id: "",
     course_material: "",
-    id: ""
+    id: "",
   });
   const [error, setError] = useState("");
   const [courseList, setCourseList] = useState([]);
@@ -85,12 +85,12 @@ const AddModule = () => {
     if (name === "course_material") {
       setInput((prevState) => ({
         ...prevState,
-        [name]: e.target.files[0]
+        [name]: e.target.files[0],
       }));
     } else {
       setInput((prevState) => ({
         ...prevState,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -122,7 +122,7 @@ const AddModule = () => {
     let course_data = {
       title: title,
       description: description,
-      course: course_id
+      course: course_id,
     };
 
     if (title == "") {
@@ -153,7 +153,7 @@ const AddModule = () => {
               // formData.append("file", course_material);
               let md = {
                 folderName: "Module",
-                id: moduleId
+                id: moduleId,
                 // formdata: formData
               };
               // let file_data = {
@@ -240,7 +240,7 @@ const AddModule = () => {
       title: element?.title,
       description: element?.description,
       course_id: element?.course,
-      id: element?.id
+      id: element?.id,
       // course_material: ""
     };
     setInput({ ...editState });
@@ -250,7 +250,7 @@ const AddModule = () => {
 
   function handleDeleteModule(element) {
     const deleteState = {
-      id: element?.id
+      id: element?.id,
     };
     setInput({ ...deleteState });
     setDeleteToggle(true);
@@ -263,7 +263,11 @@ const AddModule = () => {
           <div className="card-body media">
             <div className="media-left">
               <a href="#" className="avatar avatar-lg avatar-4by3">
-                <img src="/assets/images/courses/module.png" alt="Card image cap" className="course-img rounded" />
+                <img
+                  src="/assets/images/courses/module.png"
+                  alt="Card image cap"
+                  className="course-img rounded"
+                />
               </a>
             </div>
             <div className="media-body">
@@ -330,8 +334,13 @@ const AddModule = () => {
         course_mods.push(
           <Accordion defaultActiveKey="0">
             <Card>
-              <Accordion.Toggle as={Card.Header} eventKey={index.toString()} className="cursorPointer">
-                Course Name: {course.title} <i className="fas fa-angle-down float-right"></i>
+              <Accordion.Toggle
+                as={Card.Header}
+                eventKey={index.toString()}
+                className="cursorPointer"
+              >
+                Course Name: {course.title}{" "}
+                <i className="fas fa-angle-down float-right"></i>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={index.toString()}>
                 <Card.Body>
@@ -349,7 +358,11 @@ const AddModule = () => {
     return (
       <>
         <div className="col-lg-12 mb-4 p-0">
-          <button type="submit" className="btn btn-success" onClick={handleEventModal}>
+          <button
+            type="submit"
+            className="btn btn-success"
+            onClick={handleEventModal}
+          >
             + New Module
           </button>
         </div>
@@ -370,7 +383,8 @@ const AddModule = () => {
         if (e && e.target.value) SetCourse(e.target.value);
       }
       function handleChangeFile(e) {
-        if (e && e.target.files && e.target.files[0]) SetCourseMaterial(e.target.files[0]);
+        if (e && e.target.files && e.target.files[0])
+          SetCourseMaterial(e.target.files[0]);
       }
       function uploadCM() {
         // console.log("module", module)
@@ -378,7 +392,7 @@ const AddModule = () => {
         formData.append("file", courseMaterial);
         let md = {
           course_id: course,
-          formdata: formData
+          formdata: formData,
         };
         FacultyService.uploadCourse(md)
           .then((res) => {
@@ -407,9 +421,17 @@ const AddModule = () => {
                                     <div className="col-sm-4 col-md-4">
                                         <input id="quiz_vid" type="text" className="form-control" placeholder="Video URL" />
                                     </div> */}
-            <label className="col-sm-3 col-form-label form-label">Select Course</label>
+            <label className="col-sm-3 col-form-label form-label">
+              Select Course
+            </label>
             <div className="col-sm-9 col-md-9">
-              <select id="select_Course" name="select_Course" value={course} onChange={handleChangeCourse} className="form-select">
+              <select
+                id="select_Course"
+                name="select_Course"
+                value={course}
+                onChange={handleChangeCourse}
+                className="form-select"
+              >
                 <option value="">Select Course</option>
                 {course_List}
               </select>
@@ -419,12 +441,19 @@ const AddModule = () => {
             <></>
           ) : (
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label form-label">Course material</label>
+              <label className="col-sm-3 col-form-label form-label">
+                Course material
+              </label>
               <div className="col-sm-9 col-md-9">
                 <Form.Group controlId="formFileLg" className="mb-3">
                   {/* <Form.Label>Large file input example</Form.Label> */}
 
-                  <input onChange={handleChangeFile} type="file" size="lg" name="course_material" />
+                  <input
+                    onChange={handleChangeFile}
+                    type="file"
+                    size="lg"
+                    name="course_material"
+                  />
                 </Form.Group>
               </div>
             </div>
@@ -456,7 +485,16 @@ const AddModule = () => {
             + Add Course Material
           </button>
         </div>
-        {showGenericModal && <GenericModal xl={false} hideClose={true} setShowModal={setShowGenericModal} showModal={showGenericModal} header={"Course Material"} content={<Content />} />}
+        {showGenericModal && (
+          <GenericModal
+            xl={false}
+            hideClose={true}
+            setShowModal={setShowGenericModal}
+            showModal={showGenericModal}
+            header={"Course Material"}
+            content={<Content />}
+          />
+        )}
         <CourseMaterialsView materials={materials} />
       </div>
     );
@@ -482,7 +520,8 @@ const AddModule = () => {
       }
 
       function handleChangeFile(e) {
-        if (e && e.target.files && e.target.files[0]) setModuleMaterial(e.target.files[0]);
+        if (e && e.target.files && e.target.files[0])
+          setModuleMaterial(e.target.files[0]);
       }
       if (course) {
         FacultyService.getModules(course).then((res) => {
@@ -509,7 +548,7 @@ const AddModule = () => {
         formData.append("file", moduleMaterial);
         let md = {
           module_id: module,
-          formdata: formData
+          formdata: formData,
         };
 
         FacultyService.uploadModule(md)
@@ -540,9 +579,16 @@ const AddModule = () => {
       return (
         <>
           <div className="form-group row">
-            <label className="col-sm-3 col-form-label form-label">Select Course</label>
+            <label className="col-sm-3 col-form-label form-label">
+              Select Course
+            </label>
             <div className="col-sm-9 col-md-9">
-              <select id="select_Module" name="select_Module" onChange={handleChangeCourse} className="form-select">
+              <select
+                id="select_Module"
+                name="select_Module"
+                onChange={handleChangeCourse}
+                className="form-select"
+              >
                 <option value="">Select Course</option>
                 {course_List}
               </select>
@@ -555,9 +601,17 @@ const AddModule = () => {
                                     <div className="col-sm-4 col-md-4">
                                         <input id="quiz_vid" type="text" className="form-control" placeholder="Video URL" />
                                     </div> */}
-            <label className="col-sm-3 col-form-label form-label">Select Module</label>
+            <label className="col-sm-3 col-form-label form-label">
+              Select Module
+            </label>
             <div className="col-sm-9 col-md-9">
-              <select id="select_Module" name="select_Module" value={module} onChange={handleChangeModule} className="form-select">
+              <select
+                id="select_Module"
+                name="select_Module"
+                value={module}
+                onChange={handleChangeModule}
+                className="form-select"
+              >
                 <option value="">Select Module</option>
                 {module_List_upload}
               </select>
@@ -567,12 +621,19 @@ const AddModule = () => {
             <></>
           ) : (
             <div className="form-group row">
-              <label className="col-sm-3 col-form-label form-label">Course material</label>
+              <label className="col-sm-3 col-form-label form-label">
+                Course material
+              </label>
               <div className="col-sm-9 col-md-9">
                 <Form.Group controlId="formFileLg" className="mb-3">
                   {/* <Form.Label>Large file input example</Form.Label> */}
 
-                  <input onChange={handleChangeFile} type="file" size="lg" name="course_material" />
+                  <input
+                    onChange={handleChangeFile}
+                    type="file"
+                    size="lg"
+                    name="course_material"
+                  />
                 </Form.Group>
               </div>
             </div>
@@ -604,7 +665,16 @@ const AddModule = () => {
             + Add Module Material
           </button>
         </div>
-        {showGenericModuModal && <GenericModal xl={false} hideClose={true} setShowModal={setShowGenericModuModal} showModal={showGenericModuModal} header={"Module Material"} content={<Content />} />}
+        {showGenericModuModal && (
+          <GenericModal
+            xl={false}
+            hideClose={true}
+            setShowModal={setShowGenericModuModal}
+            showModal={showGenericModuModal}
+            header={"Module Material"}
+            content={<Content />}
+          />
+        )}
         {!showGenericModuModal && <ModuleMaterialsView />}
         {showGenericModuModal && <ModuleMaterialsView upload="1" />}
 
@@ -630,15 +700,34 @@ const AddModule = () => {
                 <span className="err text-center">{error}</span>
                 <form onSubmit={submitCourse} autoComplete="off">
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label form-label">Module Title:</label>
+                    <label className="col-sm-3 col-form-label form-label">
+                      Module Title:
+                    </label>
                     <div className="col-sm-9 col-md-9">
-                      <input id="quiz_title" name="title" value={input.title} onChange={handleChange} type="text" className="form-control" placeholder="Title" />
+                      <input
+                        id="quiz_title"
+                        name="title"
+                        value={input.title}
+                        onChange={handleChange}
+                        type="text"
+                        className="form-control"
+                        placeholder="Title"
+                      />
                     </div>
                   </div>
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label form-label">Module Description:</label>
+                    <label className="col-sm-3 col-form-label form-label">
+                      Module Description:
+                    </label>
                     <div className="col-sm-9 col-md-9">
-                      <textarea className="form-control" id="description" name="description" value={input.description} onChange={handleChange} rows="2"></textarea>
+                      <textarea
+                        className="form-control"
+                        id="description"
+                        name="description"
+                        value={input.description}
+                        onChange={handleChange}
+                        rows="2"
+                      ></textarea>
                     </div>
                   </div>
                   {/* <div className="form-group row">
@@ -656,9 +745,17 @@ const AddModule = () => {
                                     <div className="col-sm-4 col-md-4">
                                         <input id="quiz_vid" type="text" className="form-control" placeholder="Video URL" />
                                     </div> */}
-                    <label className="col-sm-3 col-form-label form-label">Course</label>
+                    <label className="col-sm-3 col-form-label form-label">
+                      Course
+                    </label>
                     <div className="col-sm-9 col-md-9">
-                      <select id="course" name="course_id" value={input.course_id} onChange={handleChange} className="form-select">
+                      <select
+                        id="course"
+                        name="course_id"
+                        value={input.course_id}
+                        onChange={handleChange}
+                        className="form-select"
+                      >
                         <option value="">Select Course</option>
                         {course_List}
                       </select>
@@ -733,7 +830,14 @@ const AddModule = () => {
           <ToastContainer autoClose={2000} />
           <div className="col-lg-12">
             <div className="bg-layout wow fadeInUp delay-0-2s">
-              <TabLayout tab1={<ModuleTab />} tabName1={"Add Module"} tab3={<ShowList />} tabName3={"Course Materials"} tab2={<ShowListMod />} tabName2={"Module Materials"} setTabName={setTabName} />
+              {/* <TabLayout tab1={<ModuleTab />} tabName1={"Add Module"} tab3={<ShowList />} tabName3={"Course Materials"} tab2={<ShowListMod />} tabName2={"Module Materials"} setTabName={setTabName} /> */}
+              <TabLayout
+                tab1={<ModuleTab />}
+                tabName1={"Add Module"}
+                tab2={<ShowListMod />}
+                tabName2={"Module Materials"}
+                setTabName={setTabName}
+              />
               {/* <AddAssign/> */}
             </div>
           </div>
