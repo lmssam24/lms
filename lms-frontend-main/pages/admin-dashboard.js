@@ -1,29 +1,48 @@
-import TokenService from "./api/token.service";
-import NavHeader from "../src/components/header/navHeader";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import AddCourseDetails from "./manage-course";
-import EditCourseDetails from "./edit-course";
-import AdminService from "./api/admin.service";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { checkIsSuperUser } from "../src/utils";
 import CouponCode from "../src/components/coupon-code";
 import FeedbackList from "../src/components/FeedbackList";
+import NavHeader from "../src/components/header/navHeader";
+import { checkIsSuperUser } from "../src/utils";
 import AdminAttendance from "./admin-attendance";
+import AdminService from "./api/admin.service";
+import TokenService from "./api/token.service";
+import EditCourseDetails from "./edit-course";
+import AddCourseDetails from "./manage-course";
 // import Feedback from "react-bootstrap/esm/Feedback";
 
 function AdminDashBoard(props) {
   const [tab, setTab] = useState(1);
   const menuList = [
-    { name: "Manage Course", link: "manage-course", icon: "fas fa-book-open", id: 2 },
-    { name: "Manage Purchase", link: "purshase-manage", icon: "fas fa-cart-arrow-down", id: 3 },
+    {
+      name: "Manage Course",
+      link: "manage-course",
+      icon: "fas fa-book-open",
+      id: 2,
+    },
+    // {
+    //   name: "Manage Purchase",
+    //   link: "purshase-manage",
+    //   icon: "fas fa-cart-arrow-down",
+    //   id: 3,
+    // },
     { name: "Coupon Code", link: "coupon-code", icon: "fa fa-gift", id: 5 },
-    { name: "Student feedback", link: "student-feedback", icon: "fa fa-comments", id: 6 },
-    { name: "Admin Attendance", link: "admin-attendance", icon: "fa  fa-clock", id: 7 }
+    {
+      name: "Student feedback",
+      link: "student-feedback",
+      icon: "fa fa-comments",
+      id: 6,
+    },
+    {
+      name: "Admin Attendance",
+      link: "admin-attendance",
+      icon: "fa  fa-clock",
+      id: 7,
+    },
     // {name: "Manage Users", link: "manage-users", icon: "fas fa-users", id: 4},
   ];
   const router = useRouter();
@@ -70,7 +89,11 @@ function AdminDashBoard(props) {
           {label}
         </p>
         {itemList.map(({ name, id, icon }, index) => (
-          <div key={"dashboard_" + index} className="menu-item" onClick={() => setTab(id)}>
+          <div
+            key={"dashboard_" + index}
+            className="menu-item"
+            onClick={() => setTab(id)}
+          >
             <div className="menu">
               <i className={icon} style={{ marginBottom: "14px" }}></i>
               <p>{name}</p>
@@ -108,19 +131,27 @@ function AdminDashBoard(props) {
             </button>
           </div>
           <ListView />
-          {showModal && <CourseModal clName="admindash" xl setShowModal={setShowModal} showModal={showModal} header={"Course Details"} />}
+          {showModal && (
+            <CourseModal
+              clName="admindash"
+              xl
+              setShowModal={setShowModal}
+              showModal={showModal}
+              header={"Course Details"}
+            />
+          )}
         </div>
       </>
     );
   }
 
-  function Tab3() {
-    return (
-      <>
-        <div> Manage Purchase </div>
-      </>
-    );
-  }
+  // function Tab3() {
+  //   return (
+  //     <>
+  //       <div> Manage Purchase </div>
+  //     </>
+  //   );
+  // }
 
   function Tab4() {
     return (
@@ -176,7 +207,9 @@ function AdminDashBoard(props) {
               <div className="col-md-4" key={"l" + index}>
                 <div className="coach-item wow fadeInUp delay-0-4s">
                   <div className="cardView m-0">
-                    <h5 onClick={() => redirectToTemplate(course.id)}>{course.title}</h5>
+                    <h5 onClick={() => redirectToTemplate(course.id)}>
+                      {course.title}
+                    </h5>
                     <ul className="coach-footer">
                       <li
                         className="cursorPointer"
@@ -189,13 +222,24 @@ function AdminDashBoard(props) {
                         <i className="fa fa-pen" />
                         <span>Edit Course</span>
                       </li>
-                      <li className="cursorPointer" onClick={() => deleteCourseDetail(course.id)}>
+                      <li
+                        className="cursorPointer"
+                        onClick={() => deleteCourseDetail(course.id)}
+                      >
                         <i className="far fa-trash-alt" />
                         <span>Delete Course</span>
                       </li>
                     </ul>
                   </div>
-                  {showEditModal && <EditCourseModal clName="admindash" xl setShowEditModal={setShowEditModal} showEditModal={showEditModal} header={"Edit Course Details"} />}
+                  {showEditModal && (
+                    <EditCourseModal
+                      clName="admindash"
+                      xl
+                      setShowEditModal={setShowEditModal}
+                      showEditModal={showEditModal}
+                      header={"Edit Course Details"}
+                    />
+                  )}
                 </div>
               </div>
             );
@@ -216,7 +260,12 @@ function AdminDashBoard(props) {
   function CourseModal(props) {
     return (
       <>
-        <Modal show={props.showModal} onHide={handleClose} dialogClassName={props.xl ? "modal-xl" : ""} className="vidModal admindash">
+        <Modal
+          show={props.showModal}
+          onHide={handleClose}
+          dialogClassName={props.xl ? "modal-xl" : ""}
+          className="vidModal admindash"
+        >
           <Modal.Header closeButton>{props.header}</Modal.Header>
           <Modal.Body>
             <AddCourseDetails setShowModal={props.setShowModal} cb={done} />
@@ -236,10 +285,19 @@ function AdminDashBoard(props) {
   function EditCourseModal(props) {
     return (
       <>
-        <Modal show={props.showEditModal} onHide={handleEditClose} dialogClassName={props.xl ? "modal-xl" : ""} className="vidModal admindash">
+        <Modal
+          show={props.showEditModal}
+          onHide={handleEditClose}
+          dialogClassName={props.xl ? "modal-xl" : ""}
+          className="vidModal admindash"
+        >
           <Modal.Header closeButton>{props.header}</Modal.Header>
           <Modal.Body>
-            <EditCourseDetails setShowModal={props.setShowEditModal} cb={edone} course={editCourse} />
+            <EditCourseDetails
+              setShowModal={props.setShowEditModal}
+              cb={edone}
+              course={editCourse}
+            />
           </Modal.Body>
           {!props.hideClose && (
             <Modal.Footer>
@@ -261,7 +319,7 @@ function AdminDashBoard(props) {
           {/* {props && props.children ? props.children : "Admin Dashboard"} */}
           {tab === 1 && <Tab1 />}
           {tab === 2 && <Tab2 />}
-          {tab === 3 && <Tab3 />}
+          {/* {tab === 3 && <Tab3 />} */}
           {tab === 4 && <Tab4 />}
           {tab === 5 && <Tab5 />}
           {tab === 6 && <Tab6 />}
