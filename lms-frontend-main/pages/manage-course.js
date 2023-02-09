@@ -83,7 +83,7 @@ function AddCourseDetails(props) {
     language: "",
     batch: "",
     module: "",
-    meeting_link:"",
+    meeting_link: "",
     meeting_pwd: ""
   });
   const [pointsList, setPointsList] = useState({});
@@ -238,7 +238,6 @@ function AddCourseDetails(props) {
       cd.image_1 = data[0]?.key;
       cd.curriculum_link = data[1]?.key;
       cd.instructor_image = data[2]?.key;
-      console.log(cd);
       AdminService.addCourse(cd).then((res) => {
         if (res?.status === 200) {
           props.cb(res.data.data);
@@ -667,7 +666,6 @@ function AddCourseDetails(props) {
               </Col>
             </Form.Group>
 
-
             <Form.Group as={Row} controlId="formPlaintextSub">
               <Form.Label column sm="2">
                 Meeting Link
@@ -677,16 +675,14 @@ function AddCourseDetails(props) {
               </Col>
             </Form.Group>
 
-
             <Form.Group as={Row} controlId="formPlaintextSub">
               <Form.Label column sm="2">
-                Meeting Passcode 
+                Meeting Passcode
               </Form.Label>
               <Col sm="5">
                 <Form.Control name="meeting_pwd" type="text" placeholder="Meeting Passcode" onChange={(e) => handleFormBuilder(e)} />
               </Col>
             </Form.Group>
-
 
             <Form.Group as={Row} controlId="formPlaintextlang">
               <Form.Label column sm="2">
