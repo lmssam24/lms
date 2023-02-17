@@ -1,8 +1,9 @@
-from email.policy import default
 import uuid
-from django.db import models
+from email.policy import default
+
 # from django.contrib.auth.models import AbstractUser, get_user_model
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.utils.timezone import now
 
 # course 70
