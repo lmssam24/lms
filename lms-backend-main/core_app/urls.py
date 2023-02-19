@@ -37,6 +37,7 @@ urlpatterns = [
     path('get_recording_student', get_recording_student.as_view()),
     path('enroll_student', EnrollStudent.as_view()),
     path('student_list', StudentList.as_view()),
+    path('student_list/<str:username>', StudentList.as_view()),
     path('student_quiz_list', StudentQuizList.as_view()),
     path('student_quiz_question_list', StudentQuizQuestions.as_view()),
     path('student_quiz_submission', StudentQuizSubmission.as_view()),
