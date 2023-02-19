@@ -21,7 +21,7 @@ from django.urls import include, path
 from rest_framework_simplejwt import views as jwt_views
 
 # admin.site.unregister(User)
-# admin.site.unregister(Group)
+admin.site.unregister(Group)
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('login',
