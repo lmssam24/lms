@@ -4,7 +4,8 @@ import LinkGenerated from "./LinkGenerated";
 function CreateEmiOffer() {
   const [courseList, setCourseList] = useState([]);
   const [course, setCourse] = useState("");
-  var [emiOffer, setEmiOffer] = useState("");
+  // var [emiOffer, setEmiOffer] = useState("");
+  var [emiOfferInMonth, setEmiOfferInMonth] = useState("");
   let [inputfields, setInputfields] = useState([]);
   let [requestForLink, setRequestForGeneratingTheLink] = useState(false);
 
@@ -27,23 +28,23 @@ function CreateEmiOffer() {
     });
   }
 
-  let inputfieldsinemi = [];
-  useEffect(() => {
-    if (emiOffer) {
-      for (let i = 1; i <= emiOffer; i++) {
-        inputfieldsinemi.push(
-          <div className="col col-6 mb-3">
-            <label htmlFor={`offerno_{i}`}>Enter the offer no {i}</label>
-            <input className="form-control rounded-0" type="number" name={`offerno_{i}`} id={`offerno_{i}`} placeholder={`Enter the offer no ${i}`} />
-          </div>
-        );
+  // let inputfieldsinemi = [];
+  // useEffect(() => {
+  //   if (emiOffer) {
+  //     for (let i = 1; i <= emiOffer; i++) {
+  //       inputfieldsinemi.push(
+  //         <div className="col col-6 mb-3">
+  //           <label htmlFor={`offerno_{i}`}>Enter the offer no {i}</label>
+  //           <input className="form-control rounded-0" type="number" name={`offerno_{i}`} id={`offerno_{i}`} placeholder={`Enter the offer no ${i}`} />
+  //         </div>
+  //       );
 
-        // <option>{emiOffer}</option>
-      }
-    }
+  //       // <option>{emiOffer}</option>
+  //     }
+  //   }
 
-    setInputfields(inputfieldsinemi);
-  }, [emiOffer]);
+  //   setInputfields(inputfieldsinemi);
+  // }, [emiOffer]);
 
   function handleChangeCourse(e) {
     if (e && e.target.value) setCourse(e.target.value);
@@ -69,25 +70,24 @@ function CreateEmiOffer() {
               </div>
             </div>
             <div className="col col-6 mb-3">
-              <label htmlFor="emi_offer">Enter the number of emi offers</label>
+              <label htmlFor="emi_offer">Enter the number of month of emi period</label>
               <input
                 className="form-control rounded-0"
                 onChange={(e) => {
-                  setEmiOffer(e.target.value);
+                  setEmiOfferInMonth(e.target.value);
                 }}
-                type="text"
-                name="emi_offer"
-                id="emi_offer"
-                placeholder="Number of Emi Offer"
+                type="number"
+                name="emi_offer_months"
+                id="emi_offer_months"
+                placeholder="Number of month of emi period"
               />
             </div>
           </div>
-          {emiOffer && inputfields.length > 0 && inputfields}
           <button className="btn btn-primary my-3 button-style" type="submit">
             submit
           </button>
         </form>
-        <button
+        {/* <button
           className="btn btn-primary my-3 button-style"
           type="submit"
           onClick={() => {
@@ -96,7 +96,7 @@ function CreateEmiOffer() {
         >
           Generate Link
         </button>
-        {requestForLink && <LinkGenerated />}
+        {requestForLink && <LinkGenerated />} */}
       </div>
     </>
   );

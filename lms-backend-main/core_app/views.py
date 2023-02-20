@@ -618,28 +618,30 @@ class StudentList(APIView):
                                                                              'user__last_name',
                                                                              'interested_categories')
             if student.exists():
-                return Response({"data": student[0], "status": status.HTTP_200_OK})
+                return Response({"data": student[0]}, status=status.HTTP_200_OK)
             else:
-                return Response({"data": "Not found", "status": status.HTTP_404_NOT_FOUND})
-        elif request.user.is_staff:
-            student_list = Student.objects.all().values('user__id', 'user__username',
-                                                        'user__first_name',
-                                                        'user__last_name',
-                                                        'interested_categories')
+                return Response({"data": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            if Teacher.objects.filter(user=request.user):
-                teacher = get_object_or_404(Teacher, user_id=request.user.id)
-                student_list = Student.objects.filter(user__is_staff=False, enrolled_student_id__teacher__id=teacher.id).values('user__id', 'user__username',
-                                                                                                                                'user__first_name',
-                                                                                                                                'user__last_name',
-                                                                                                                                'interested_categories')
-            else:
+            if request.user.is_staff:
                 student_list = Student.objects.all().values('user__id', 'user__username',
                                                             'user__first_name',
                                                             'user__last_name',
                                                             'interested_categories')
-        student_list_ = [k for k in student_list]
-        return Response({"data": student_list_}, status=200)
+            else:
+                if Teacher.objects.filter(user=request.user):
+                    teacher = get_object_or_404(
+                        Teacher, user_id=request.user.id)
+                    student_list = Student.objects.filter(user__is_staff=False, enrolled_student_id__teacher__id=teacher.id).values('user__id', 'user__username',
+                                                                                                                                    'user__first_name',
+                                                                                                                                    'user__last_name',
+                                                                                                                                    'interested_categories')
+                else:
+                    student_list = Student.objects.all().values('user__id', 'user__username',
+                                                                'user__first_name',
+                                                                'user__last_name',
+                                                                'interested_categories')
+            student_list_ = [k for k in student_list]
+            return Response({"data": student_list_}, status=200)
 
 
 class CreateMeeting(APIView):
