@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-const LinkGenerated = ({ price }) => {
-  // let price = 800;
-  let link = "http://localhost:3000/checkout";
+const LinkGenerated = ({ price, course }) => {
+  price = 800;
+  course = "just a dummy okayyyy";
+  // https://www.youtube.com/results?search_query=are+dwarpalo
+
+  let link = `http://localhost:3000/checkout?price=${price}&course=${course}`;
   function myFunction() {
     // Get the text field
     var copyText = document.getElementById("inputfield");
-    console.log(copyText, "copytexttttt");
     // Select the text field
     copyText?.select();
     copyText?.setSelectionRange(0, 99999); // For mobile devices

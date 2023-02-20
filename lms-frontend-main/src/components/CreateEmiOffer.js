@@ -87,7 +87,7 @@ function CreateEmiOffer() {
             submit
           </button>
         </form>
-        {/* <button
+        <button
           className="btn btn-primary my-3 button-style"
           type="submit"
           onClick={() => {
@@ -96,7 +96,7 @@ function CreateEmiOffer() {
         >
           Generate Link
         </button>
-        {requestForLink && <LinkGenerated />} */}
+        {requestForLink && <LinkGenerated />}
       </div>
     </>
   );

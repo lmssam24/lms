@@ -17,9 +17,11 @@ const Checkout = () => {
   const [discount, setDiscount] = useState(0);
   const [priceAfterDiscount, setPriceAfterDiscount] = useState(0);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [emiPrice, setEmiPrice] = useState(0);
+
   const [modalText, setModalText] = useState({
     heading: "Payment",
-    context: "Thank you for your order.<br/> We are now redirecting you to CcAvenue to make payment.",
+    context: "Thank you for your order.<br/> We are now redirecting you to CcAvenue to make payment."
   });
 
   const [checkout, setCheckout] = useState({
@@ -40,7 +42,19 @@ const Checkout = () => {
     coupon: couponCode,
     discount,
     final_amount: 0,
-    cart: [],
+    cart: []
+  });
+
+  // part for discount
+
+  useEffect(() => {
+    // console.log(window?.location.href, "window locationnnn okayyy done...");
+    const url = new URL(window.location.href);
+    if (url.search.length > 0) {
+      const searchParams = url.searchParams;
+      setEmiPrice(searchParams?.get("price"));
+      console.log(searchParams?.get("course"));
+    }
   });
 
   // useEffect(() => {
@@ -62,7 +76,6 @@ const Checkout = () => {
   }
 
   useEffect(() => {
-    console.log("checkout page");
     getCartInfo();
   }, []);
 
@@ -70,7 +83,7 @@ const Checkout = () => {
     if (router?.query?.app_code || router?.query?.code) {
       setModalText({
         heading: "Payment",
-        context: "Validating the data",
+        context: "Validating the data"
       });
       setOpenPaymentModal(true);
       validateTransaction(router?.query);
@@ -88,7 +101,7 @@ const Checkout = () => {
         ...prevState,
         total_amount: temp_total,
         final_amount: temp_total - (temp_total * discount) / 100,
-        cart: cartList,
+        cart: cartList
       }));
     }
   }, [cartList, discount]);
@@ -111,7 +124,7 @@ const Checkout = () => {
           if (data?.success) {
             setModalText({
               heading: "Payment received",
-              context: "Your transaction was successful!,<br/> Page will be redirected to home in 5 Seconds",
+              context: "Your transaction was successful!,<br/> Page will be redirected to home in 5 Seconds"
             });
             setTimeout(() => {
               return router.push("/");
@@ -119,7 +132,7 @@ const Checkout = () => {
           } else {
             setModalText({
               heading: "Payment Failed",
-              context: "Your transaction was failed!,<br/> Page will be redirected to cart in 5 Seconds",
+              context: "Your transaction was failed!,<br/> Page will be redirected to cart in 5 Seconds"
             });
             setTimeout(() => {
               return router.push("/cart");
@@ -137,12 +150,11 @@ const Checkout = () => {
     setOpenPaymentModal(true);
     setModalText({
       heading: "Payment",
-      context: "Thank you for your order. We are now redirecting you to CcAvenue to make payment.",
+      context: "Thank you for your order. We are now redirecting you to CcAvenue to make payment."
     });
     CartService.checkout(checkout)
       .then((res) => {
         if (res && res.status === 200) {
-          console.log(res.data.payment_url, "balajee mishraa okay lets start with it.");
           setTimeout(() => {
             // window.open(res.data.payment_url,"_target")
             window.location.href = res.data.payment_url;
@@ -179,7 +191,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            first_name: e.target.value,
+                            first_name: e.target.value
                           }));
                         }}
                         placeholder="First Name"
@@ -198,7 +210,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            last_name: e.target.value,
+                            last_name: e.target.value
                           }));
                         }}
                         placeholder="Last Name"
@@ -217,7 +229,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            phone_number: e.target.value,
+                            phone_number: e.target.value
                           }));
                         }}
                         placeholder="Phone Number"
@@ -237,7 +249,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            email: e.target.value,
+                            email: e.target.value
                           }));
                         }}
                         placeholder="Email Address"
@@ -257,7 +269,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            company_name: e.target.value,
+                            company_name: e.target.value
                           }));
                         }}
                         placeholder="Company name"
@@ -275,7 +287,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            company_address: e.target.value,
+                            company_address: e.target.value
                           }));
                         }}
                         placeholder="Company Address"
@@ -294,7 +306,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            country: e.target.value,
+                            country: e.target.value
                           }));
                           console.log(checkout);
                         }}
@@ -317,7 +329,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            state: e.target.value,
+                            state: e.target.value
                           }));
                         }}
                       >
@@ -343,7 +355,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            city: e.target.value,
+                            city: e.target.value
                           }));
                         }}
                         placeholder="City"
@@ -375,7 +387,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            zipcode: e.target.value,
+                            zipcode: e.target.value
                           }));
                         }}
                         placeholder="Zip"
@@ -394,7 +406,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            street: e.target.value,
+                            street: e.target.value
                           }));
                         }}
                         placeholder="House, street name"
@@ -413,7 +425,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            address: e.target.value,
+                            address: e.target.value
                           }));
                         }}
                         placeholder="Apartment, suite, unit etc."
@@ -435,7 +447,7 @@ const Checkout = () => {
                         onChange={(e) => {
                           setCheckout((prevState) => ({
                             ...prevState,
-                            note: e.target.value,
+                            note: e.target.value
                           }));
                         }}
                       />
@@ -472,12 +484,23 @@ const Checkout = () => {
                         </tr>
                       ))}
                       <tr>
-                        <td>
-                          <strong>Order Total</strong>
-                        </td>
-                        <td>
-                          <strong>INR {checkout?.total_amount}</strong>
-                        </td>
+                        {!emiPrice ? (
+                          <>
+                            <td>
+                              <strong>Order Total</strong>
+                            </td>
+                            <td>
+                              <strong>INR {checkout?.total_amount}</strong>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td>This Month Emi Payment:</td>
+                            <td>
+                              <strong>INR {emiPrice}</strong>
+                            </td>
+                          </>
+                        )}
                       </tr>
                       {discount ? (
                         <>

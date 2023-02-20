@@ -22,9 +22,8 @@ const ManageEmi = () => {
       e.preventDefault();
 
       const response = await UserService.findUser(emailId);
-      console.log(response.data.data, "responsee");
       if (response.status == 200) {
-        setUserDetail(response.data.data);
+        setUserDetail(response?.data?.data);
         setSpinner(false);
         setUserFound(true);
         setClicked(false);
@@ -105,10 +104,6 @@ const ManageEmi = () => {
                   see previous offer
                 </button>
               </div>
-
-              {/* <div className="card">
-                <h5>User Details</h5>
-              </div> */}
 
               <div class="card" style={{ width: "18rem", "margin-bottom": "20px" }}>
                 <div class="card-body">
