@@ -8,7 +8,7 @@ router.register(r'video', VideoViewSet, basename='video')
 router.register(r'module', ModuleViewSet, basename="module")
 router.register(r'feedback', FeedbackViewSet, basename="feedback")
 
-urlpatterns = [
+urlpatterns = [ 
     path('login', signin.as_view(), name='login'),
     path('register', RegisterUser.as_view(), name='register'),
     path('add_quiz', AddQuiz.as_view(), name='add_quiz'),

@@ -128,7 +128,7 @@ const CourseGrid = () => {
             <h4>You are not enrolled in any course</h4>
           </div>
         ) : (
-          <h4>Your Courses</h4>
+          <h4>Your Course</h4>
         )}
       </div>
 

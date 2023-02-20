@@ -21,7 +21,6 @@ function ModuleMaterialsView({ upload }) {
   }
 
   useEffect(() => {
-    console.log(upload, "uploadddddd");
     if (upload) {
       setSpinner(false);
     } else if (!upload) {
@@ -143,7 +142,7 @@ function ModuleMaterialsView({ upload }) {
                         </Card.Body>
                         <Card.Footer>
                           <button
-                            className="btn btn-warning"
+                            className="btn btn-danger"
                             onClick={() => {
                               deleteDoc(material);
                             }}

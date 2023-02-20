@@ -81,12 +81,7 @@ const JoinMeet = () => {
                 <div className="mx-2 row">
                   <label className="col-sm-4 form-label">Course:</label>
                   <div className="col-sm-8 col-md-8">
-                    <select
-                      name="meet_course"
-                      onChange={handleCourseChange}
-                      value={courseDetails?.course.id}
-                      className="form-select"
-                    >
+                    <select name="meet_course" onChange={handleCourseChange} value={courseDetails?.course.id} className="form-select">
                       <option value="">Select Course</option>
                       {courseList &&
                         courseList.map((e, key) => {
@@ -103,16 +98,12 @@ const JoinMeet = () => {
                   {courseDetails?.meeting_link && (
                     <div className="mx-auto p-3 card text-center">
                       <div className="card-body">
-                        <a
-                          href={courseDetails?.meeting_link}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
+                        <a href={courseDetails?.meeting_link} target="_blank" rel="noreferrer">
                           <span className="title">Meeting Link</span>
-                          <i className="fas fa-video"></i>
+                          <i className="fas fa-video ml-3"></i>
                         </a>
-                        <p className="card-text">
-                          Passcode: {courseDetails?.meeting_pwd}
+                        <p className="card-text ml-2 mt-2">
+                          Passcode:<span> {courseDetails?.meeting_pwd}</span>
                         </p>
                       </div>
                     </div>
@@ -121,9 +112,7 @@ const JoinMeet = () => {
                   {courseDetails && !courseDetails?.meeting_link && (
                     <div className="mx-auto p-3 card text-center">
                       <div className="card-body">
-                        <p className="card-text">
-                          No meeting link added yet for this course.
-                        </p>
+                        <p className="card-text">No meeting link added yet for this course.</p>
                       </div>
                     </div>
                   )}
