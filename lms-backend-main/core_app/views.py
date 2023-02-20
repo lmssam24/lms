@@ -1,5 +1,4 @@
 # from generate_token import generate_token
-import json
 import mimetypes
 import os
 import tempfile
@@ -20,7 +19,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.core import serializers
 from django.core.files.storage import FileSystemStorage
-from django.db.models import F
+from django.db.models import F, Q
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -235,21 +234,31 @@ class AddModuleQuiz(APIView):
         if data:
             teacher = Teacher.objects.get(user=user)
             if teacher:
-                title = data['title']
-                detail = data['detail']
-                module_id = data['module_id']
+                try:
+                    title = data['title']
+                    detail = data['detail']
+                    module_id = data['module_id']
+                    course_id = data['course_id']
 
-                teacher_obj = Teacher.objects.get(user_id=request.user.id)
-                module_obj = Module.objects.get(id=module_id)
-                if Quiz.objects.filter(teacher=teacher_obj, title=title, is_deleted=False).exists():
-                    return Response({'message': f'Quiz already present'}, status=200)
+                    teacher_obj = Teacher.objects.get(user_id=request.user.id)
+                    module_obj = Module.objects.get(id=module_id)
+                    course_obj = Course.objects.get(id=course_id)
+                    if Quiz.objects.filter(teacher=teacher_obj, title=title, is_deleted=False).exists():
+                        return Response({'message': f'Quiz already present'}, status=200)
 
-                quiz = Quiz(teacher=teacher_obj, title=title, detail=detail)
-                quiz.save()
-
-                module_quiz = ModuleQuiz(module=module_obj, quiz=quiz)
-                module_quiz.save()
-                return Response({'message': f'Quiz saved for {teacher.user}'}, status=200)
+                    quiz = Quiz(teacher=teacher_obj,
+                                title=title, detail=detail)
+                    quiz.save()
+                    try:
+                        course_quiz = CourseQuiz(course=course_obj, quiz=quiz)
+                        course_quiz.save()
+                    except Exception as e:
+                        print(e)
+                    module_quiz = ModuleQuiz(module=module_obj, quiz=quiz)
+                    module_quiz.save()
+                    return Response({'message': f'Quiz saved for {teacher.user}'}, status=200)
+                except Exception as e:
+                    print(e)
             else:
                 return Response({'message': f'Teacher not present'}, status=400)
         else:
@@ -602,8 +611,17 @@ class EnrollStudent(APIView):
 
 class StudentList(APIView):
     # permission_classes = [IsAuthenticated]
-    def get(self, request):
-        if request.user.is_staff:
+    def get(self, request, username=None):
+        if username:
+            student = Student.objects.filter(user__username=username).values('user__id', 'user__username',
+                                                                             'user__first_name',
+                                                                             'user__last_name',
+                                                                             'interested_categories')
+            if student.exists():
+                return Response({"data": student[0], "status": status.HTTP_200_OK})
+            else:
+                return Response({"data": "Not found", "status": status.HTTP_404_NOT_FOUND})
+        elif request.user.is_staff:
             student_list = Student.objects.all().values('user__id', 'user__username',
                                                         'user__first_name',
                                                         'user__last_name',
@@ -794,8 +812,7 @@ class StudentQuizList(APIView):
         student_obj = Student.objects.get(user_id=request.user.id)
         users_quiz = Quiz.objects.filter(is_deleted=False, id__in=list(CourseQuiz.objects.filter(
             course__in=list(Course.objects.filter(is_deleted=False, id__in=list(
-                StudentCourse.objects.filter(student__user=request.user).values_list('course', flat=True))).values_list('id', flat=True))).values_list('quiz', flat=True)))
-
+                StudentCourse.objects.filter(student=student_obj.id).values_list('course', flat=True))).values_list('id', flat=True))).values_list('quiz', flat=True)))
         serializer = QuizSerializer(users_quiz, many=True)
         for idx, x in enumerate(serializer.data):
             student_quiz = StudentQuizDetails.objects.filter(
