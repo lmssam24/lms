@@ -105,7 +105,7 @@ const AdminAttendance = () => {
                       setAddAttendance(true);
                     }}
                   >
-                    Take Attendance
+                    Take attendance
                   </a>
 
                   <a

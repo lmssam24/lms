@@ -106,7 +106,7 @@ const Attendance = () => {
                       setAddAttendance(true);
                     }}
                   >
-                    Take Attendance
+                    Take attendance
                   </a>
 
                   <a

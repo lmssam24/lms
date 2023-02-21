@@ -36,7 +36,7 @@ const CreateMeet = () => {
           <ToastContainer autoClose={2000} />
           <div className="col-lg-12">
             <div className="bg-layout wow fadeInUp delay-0-2s">
-              <TabLayout tab1={<CreateMeet />} tabName1={"Create Live class link"} tab2={<MeetList />} tabName2={"Meeting Link"} />
+              <TabLayout tab1={<CreateMeet />} tabName1={"Create Live Class Link"} tab2={<MeetList />} tabName2={"Meeting Link"} />
             </div>
           </div>
         </div>

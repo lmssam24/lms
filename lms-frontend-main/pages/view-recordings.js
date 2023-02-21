@@ -63,10 +63,10 @@ const ViewRecordings = () => {
 
   return (
     <FacLayout>
-      <p className="title-db">HOME / View Recording Class</p>
+      <p className="title-db">HOME / View Previous Recorded Classes</p>
       <hr />
       <div className="container bg-white my-4 py-4">
-        <label for="course_title">Select Course to see recorded video </label>
+        <label for="course_title">Select Course to view the recorded video </label>
         <select
           name="course"
           onChange={(e) => {
