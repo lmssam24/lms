@@ -29,7 +29,7 @@ from django_zoom_meetings import ZoomMeetings
 from LMS.utilization import html_send_mail
 from rest_framework import filters, status
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -613,14 +613,17 @@ class StudentList(APIView):
     # permission_classes = [IsAuthenticated]
     def get(self, request, username=None):
         if username:
-            student = Student.objects.filter(user__username=username).values('user__id', 'user__username',
-                                                                             'user__first_name',
-                                                                             'user__last_name',
-                                                                             'interested_categories')
-            if student.exists():
-                return Response({"data": student[0]}, status=status.HTTP_200_OK)
-            else:
-                return Response({"data": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+            try:
+                student = Student.objects.filter(user__username=username).values('id', 'user__id', 'user__username',
+                                                                                 'user__first_name',
+                                                                                 'user__last_name',
+                                                                                 'interested_categories', 'emi_option')
+                if student.exists():
+                    return Response({"data": student[0]}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"data": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                print(e)
         else:
             if request.user.is_staff:
                 student_list = Student.objects.all().values('user__id', 'user__username',
@@ -1695,3 +1698,20 @@ class DeleteModuleMaterial(APIView):
 
         except ModuleMaterial.DoesNotExist:
             return Response(data="Not found", status=status.HTTP_400_BAD_REQUEST)
+
+
+class StudentEmiOption(APIView):
+    permission_classes = [IsAdminUser]
+
+    def put(self, request, student_id):
+        student = Student.objects.filter(id=student_id)
+        if student.exists():
+            serializer = StudentSerializer(
+                student[0], data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Status Updated", "data": serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Problem", "data": serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message": f"No student with given id = {student_id}"}, status=status.HTTP_404_NOT_FOUND)

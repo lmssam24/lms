@@ -112,6 +112,7 @@ class ModuleQuiz(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     interested_categories = models.TextField()
+    emi_option = models.JSONField(blank=True, null=True)
 
 
 class StudentCourseEnrollment(models.Model):
