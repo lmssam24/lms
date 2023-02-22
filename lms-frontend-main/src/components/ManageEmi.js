@@ -5,22 +5,50 @@ import CreateEmiOffer from "./CreateEmiOffer";
 import UserService from "../../pages/api/user.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import AdminService from "../../pages/api/admin.service";
+import LinkGenerated from "./LinkGenerated";
 const ManageEmi = () => {
   let [clicked, setClicked] = useState(false);
-
+  const [courseList, setCourseList] = useState([]);
   let [spinner, setSpinner] = useState(false);
   let [createEmi, setCreateEmi] = useState(false);
   let [userFound, setUserFound] = useState(false);
   const [userDetail, setUserDetail] = useState(true);
+  const [coursesWithEmiOffer, setCoursesWithEmiOffer] = useState([]);
+  let [linkmanage, setLinkManage] = useState("");
   let router = useRouter();
+
+  useEffect(() => {
+    AdminService.listCourseDetails().then((res) => {
+      if (res && res.data && res.data.data) {
+        setCourseList(res.data.data);
+        fn();
+      }
+    });
+  }, [userDetail]);
+
+  const fn = () => {
+    let courseListWithEmiOffer = [];
+    if (userDetail?.emi_option && courseList) {
+      setSpinner(true);
+      for (let i in userDetail?.emi_option) {
+        courseList.forEach((e) => {
+          if (e.course.id == i) {
+            e["emioffer_months"] = userDetail?.emi_option[i];
+            courseListWithEmiOffer.push(e);
+          }
+        });
+      }
+      setCoursesWithEmiOffer(courseListWithEmiOffer);
+      setSpinner(false);
+    }
+  };
 
   const FindTheUser = () => {
     let [emailId, setEmailId] = useState("");
     const submitEmail = async (e) => {
       setSpinner(true);
       e.preventDefault();
-
       const response = await UserService.findUser(emailId);
       if (response.status == 200) {
         setUserDetail(response?.data?.data);
@@ -28,7 +56,6 @@ const ManageEmi = () => {
         setUserFound(true);
         setClicked(false);
         toast.success("student found successfully");
-        // return router.push("/admin-dashboard");
       } else {
         setSpinner(false);
         toast.error("student not found please give correct credential of user");
@@ -63,7 +90,7 @@ const ManageEmi = () => {
                   </div>
                 </div>
                 <button className="btn btn-primary my-3 button-style" type="submit">
-                  Find the user
+                  search user
                 </button>
               </form>
             </div>
@@ -92,18 +119,18 @@ const ManageEmi = () => {
         {clicked && <FindTheUser />}
         {userFound && (
           <>
-            <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-around">
               <div>
                 <button className="btn btn-primary my-3 mx-5 button-style" onClick={() => setCreateEmi(true)}>
                   Give Emi offer
                 </button>
               </div>
 
-              <div>
+              {/* <div>
                 <button className="btn btn-primary my-3 mx-5 button-style" onClick={() => setCreateEmi(true)}>
                   see previous offer
                 </button>
-              </div>
+              </div> */}
 
               <div class="card" style={{ width: "18rem", "margin-bottom": "20px" }}>
                 <div class="card-body">
@@ -118,18 +145,49 @@ const ManageEmi = () => {
                         </span>
                       </strong>
                     </li>
-                    <li class="list-group-item fw-bolder">Mobile No:</li>
+                    {/* <li class="list-group-item fw-bolder">Mobile No:</li> */}
                     <li class="list-group-item fw-bolder">
                       <strong>Email : {userDetail.user__username}</strong>
                     </li>
+                    {/* {spinner && (
+                      <>
+                        <ClipLoader color="#36d7b7" size={50} />
+                      </>
+                    )} */}
+                    {coursesWithEmiOffer.length > 0 && userDetail?.emi_option && (
+                      <>
+                        <li class="list-group-item fw-bolder">
+                          <strong> Previousemioffer(if any)</strong>
+                        </li>
+                        {coursesWithEmiOffer.map((evt, i) => (
+                          <>
+                            {/* {console.log(e,"jdfghmydxc")} */}
+                            <button
+                              class="btn btn-info mt-3"
+                              onClick={(e) => {
+                                setLinkManage(evt);
+                              }}
+                            >
+                              Detail of offer {i + 1}
+                            </button>
+                          </>
+                        ))}
+                      </>
+                    )}
+                    {!userDetail?.emi_option && (
+                      <li class="list-group-item fw-bolder">
+                        <strong> Previousemioffer(if any) : No offer given yet</strong>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
+              <div>{linkmanage && <LinkGenerated linkmanage={linkmanage} userId={userDetail.user__id} />}</div>
             </div>
           </>
         )}
 
-        {createEmi && <CreateEmiOffer />}
+        {createEmi && <CreateEmiOffer emi_option={userDetail?.emi_option} id={userDetail?.id} />}
 
         {/* <button className="btn btn-primary my-3 button-style mx-5" type="submit">
           Give user emi access

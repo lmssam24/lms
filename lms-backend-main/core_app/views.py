@@ -729,6 +729,7 @@ class UserProfile(APIView):
         try:
             user = User.objects.get(id=request.user.id)
             data = dict()
+            data['id'] = user.id
             data['username'] = user.username
             data['first_name'] = user.first_name
             data['last_name'] = user.last_name

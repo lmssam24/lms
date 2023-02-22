@@ -4,6 +4,8 @@ const county_state = require("../public/assets/files/countries+states.json");
 import { useEffect } from "react";
 import { useState } from "react";
 import CartService from "./api/cart.service";
+import ProfileService from "./api/profile.service";
+import AdminService from "./api/admin.service";
 import { Modal, ResponsiveEmbed } from "react-bootstrap";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,11 +20,17 @@ const Checkout = () => {
   const [priceAfterDiscount, setPriceAfterDiscount] = useState(0);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [emiPrice, setEmiPrice] = useState(0);
-
+  const [courseprice, setCoursePrice] = useState(0);
+  const [coursename, setCourseName] = useState("");
+  const [userId, setUserId] = useState("");
+  const [emioffer, setEmiOfferMonth] = useState(0);
+  const [userVerificationcheck, setUserVerified] = useState(false);
   const [modalText, setModalText] = useState({
     heading: "Payment",
     context: "Thank you for your order.<br/> We are now redirecting you to CcAvenue to make payment."
   });
+  const [courseList, setCourseList] = useState([]);
+  const [product, setProduct] = useState([]);
 
   const [checkout, setCheckout] = useState({
     first_name: "",
@@ -45,17 +53,41 @@ const Checkout = () => {
     cart: []
   });
 
-  // part for discount
-
   useEffect(() => {
     // console.log(window?.location.href, "window locationnnn okayyy done...");
     const url = new URL(window.location.href);
     if (url.search.length > 0) {
       const searchParams = url.searchParams;
-      setEmiPrice(searchParams?.get("price"));
-      console.log(searchParams?.get("course"));
+      setEmiPrice(searchParams?.get("emiamount"));
+      setCoursePrice(searchParams?.get("courseprice"));
+      setCourseName(searchParams?.get("course"));
+      setUserId(searchParams?.get("credential"));
+      setEmiOfferMonth(searchParams?.get("emi_offer"));
+      const id = searchParams?.get("productid");
+      AdminService.listCourseDetails().then((res) => {
+        if (res && res.data && res.data.data) {
+          res.data.data.forEach((element) => {
+            if (element.course.id == id) {
+              let product = [{}];
+              product["product"] = element;
+              setProduct([product]);
+            }
+          });
+        }
+      });
+      // console.log(coursename, courseprice, userId, emioffer, emiPrice, "seeee");
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    ProfileService.userProfile().then((res) => {
+      if (res && res.data && res.data.data) {
+        if (res.data.data.id == userId) {
+          setUserVerified(true);
+        }
+      }
+    });
+  }, [userId]);
 
   // useEffect(() => {
   //   setPriceAfterDiscount(checkout?.total_amount - (discount * checkout?.total_amount) / 100);
@@ -97,14 +129,15 @@ const Checkout = () => {
       cartList?.forEach((cart_list) => {
         temp_total += +cart_list?.product?.price?.price;
       });
+      temp_total = emiPrice ? emiPrice : temp_total;
       setCheckout((prevState) => ({
         ...prevState,
         total_amount: temp_total,
         final_amount: temp_total - (temp_total * discount) / 100,
-        cart: cartList
+        cart: emiPrice ? product : cartList
       }));
     }
-  }, [cartList, discount]);
+  }, [cartList, discount, product]);
   const getCartInfo = () => {
     CartService.getCartInfo()
       .then((res) => {
@@ -474,34 +507,47 @@ const Checkout = () => {
                 <div className="package-summary mb-25">
                   <table>
                     <tbody>
-                      {cartList?.map((item, index) => (
-                        <tr key={index}>
-                          <td>
-                            {item?.product?.title}
-                            <strong> × 1</strong>
-                          </td>
-                          <td>INR {(+item?.product?.price?.price).toFixed(2)}</td>
-                        </tr>
-                      ))}
-                      <tr>
-                        {!emiPrice ? (
-                          <>
+                      {!emiPrice ? (
+                        <>
+                          {cartList?.map((item, index) => (
+                            <tr key={index}>
+                              <td>
+                                {item?.product?.title}
+                                <strong> × 1</strong>
+                              </td>
+                              <td>INR {(+item?.product?.price?.price).toFixed(2)}</td>
+                            </tr>
+                          ))}
+                          <tr>
                             <td>
                               <strong>Order Total</strong>
                             </td>
                             <td>
                               <strong>INR {checkout?.total_amount}</strong>
                             </td>
-                          </>
-                        ) : (
-                          <>
-                            <td>This Month Emi Payment:</td>
+                          </tr>
+                        </>
+                      ) : (
+                        <>
+                          <tr>
+                            <td>
+                              {coursename}
+                              {/* <strong> × 1</strong> */}
+                            </td>
+                            <td>INR {courseprice}</td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              <strong>This Month Emi:</strong>
+                            </td>
                             <td>
                               <strong>INR {emiPrice}</strong>
                             </td>
-                          </>
-                        )}
-                      </tr>
+                          </tr>
+                        </>
+                      )}
+
                       {discount ? (
                         <>
                           <tr>
