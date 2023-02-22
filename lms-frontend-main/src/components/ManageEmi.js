@@ -82,9 +82,9 @@ const ManageEmi = () => {
                       onChange={(e) => {
                         setEmailId(e.target.value);
                       }}
-                      type="email"
-                      name="email"
-                      id="email"
+                      type="emailid"
+                      name="emailid"
+                      id="emailid"
                       placeholder="Enter the email id"
                     />
                   </div>

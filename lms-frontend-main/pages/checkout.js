@@ -84,6 +84,9 @@ const Checkout = () => {
       if (res && res.data && res.data.data) {
         if (res.data.data.id == userId) {
           setUserVerified(true);
+        } else {
+          toast.warning("User unauthorized");
+          return router.push("/login");
         }
       }
     });
