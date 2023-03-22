@@ -3,7 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const LinkGenerated = ({ linkmanage, userId }) => {
   let price = parseInt(linkmanage.price.price) / parseInt(linkmanage.emioffer_months);
-  let link = `https://educationnest.com/checkout?credential=${userId}&emiamount=${price}&course=${linkmanage.course.title}&emi_offer=${linkmanage.emioffer_months}&courseprice=${linkmanage.price.price}&productid=${linkmanage.course.id}`;
+  // let link = `https://educationnest.com/checkout?credential=${userId}&emiamount=${price}&course=${linkmanage.course.title}&emi_offer=${linkmanage.emioffer_months}&courseprice=${linkmanage.price.price}&productid=${linkmanage.course.id}`;
+  let link = `http://localhost:3000/checkout?credential=${userId}&emiamount=${price}&course=${linkmanage.course.title}&emi_offer=${linkmanage.emioffer_months}&courseprice=${linkmanage.price.price}&productid=${linkmanage.course.id}`;
   function myFunction() {
     // Get the text field
     var copyText = document.getElementById("inputfield");

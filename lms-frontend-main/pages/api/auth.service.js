@@ -2,15 +2,16 @@ import api from "./api";
 import TokenService from "./token.service";
 
 const register = (userData) => {
-  return api.post("/register", {
-    userData
-  })
-  .then(response => {
-    return response;
-  })
-  .catch(error => {
-    return error;
-  });
+  return api
+    .post("/register", {
+      userData
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
 };
 
 const login = (username, password) => {
@@ -25,8 +26,8 @@ const login = (username, password) => {
       }
       return response;
     })
-    .catch(error => {
-        return error;
+    .catch((error) => {
+      return error;
     });
 };
 
@@ -39,37 +40,38 @@ const getCurrentUser = () => {
 };
 
 const resetPassWordEmail = (userData) => {
-  return api.post("/reset-password-email",  
-    userData
- )
-  .then(response => {
-    // console.log('resposn of forgtpassword', response)
-    return response;
-  })
-  .catch(error => {
-    return error;
-  });
+  return api
+    .post("/reset-password-email", userData)
+    .then((response) => {
+      // console.log('resposn of forgtpassword', response)
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
 };
 
 const resetPassWord = (userData) => {
-  return api.post("/reset-password", userData)
-  .then(response => {
-    // console.log('response of forgtpassword', response)
-    return response;
-  })
-  .catch(error => {
-    return error;
-  });
+  return api
+    .post("/reset-password", userData)
+    .then((response) => {
+      // console.log('response of forgtpassword', response)
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
 };
 
 const getUserProfile = (userData) => {
-  return api.get("/user_profile")
-  .then(response => {
-    return response;
-  })
-  .catch(error => {
-    return error;
-  });
+  return api
+    .get("/user_profile")
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
 };
 
 const AuthService = {

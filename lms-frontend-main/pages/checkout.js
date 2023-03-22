@@ -6,11 +6,12 @@ import { useState } from "react";
 import CartService from "./api/cart.service";
 import ProfileService from "./api/profile.service";
 import AdminService from "./api/admin.service";
+
 import { Modal, ResponsiveEmbed } from "react-bootstrap";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Link from "next/link";
+
 const Checkout = () => {
   const router = useRouter();
   const [cartList, setCartList] = useState([]);
@@ -25,6 +26,7 @@ const Checkout = () => {
   const [userId, setUserId] = useState("");
   const [emioffer, setEmiOfferMonth] = useState(0);
   const [userVerificationcheck, setUserVerified] = useState(false);
+  const [userDetail, setUserDetail] = useState();
   const [modalText, setModalText] = useState({
     heading: "Payment",
     context: "Thank you for your order.<br/> We are now redirecting you to CcAvenue to make payment."
@@ -54,6 +56,18 @@ const Checkout = () => {
   });
 
   useEffect(() => {
+    const url = new URL(window.location.href);
+    const searchParams = url.searchParams;
+    ProfileService.userProfile().then((userres) => {
+      if (userres && userres.data && userres.data.data) {
+        if (userres.data.data.id == searchParams?.get("credential")) {
+          setUserDetail(userres.data.data);
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     // console.log(window?.location.href, "window locationnnn okayyy done...");
     const url = new URL(window.location.href);
     if (url.search.length > 0) {
@@ -68,25 +82,22 @@ const Checkout = () => {
         if (res && res.data && res.data.data) {
           res.data.data.forEach((element) => {
             if (element.course.id == id) {
-              let product = [{}];
+              let product = {};
               product["product"] = element;
+              product["user"] = userDetail;
               setProduct([product]);
             }
           });
         }
       });
-      // console.log(coursename, courseprice, userId, emioffer, emiPrice, "seeee");
     }
-  }, []);
+  }, [userDetail]);
 
   useEffect(() => {
     ProfileService.userProfile().then((res) => {
       if (res && res.data && res.data.data) {
         if (res.data.data.id == userId) {
           setUserVerified(true);
-        } else {
-          toast.warning("User unauthorized");
-          return router.push("/login");
         }
       }
     });
@@ -132,7 +143,8 @@ const Checkout = () => {
       cartList?.forEach((cart_list) => {
         temp_total += +cart_list?.product?.price?.price;
       });
-      temp_total = emiPrice ? emiPrice : temp_total;
+      // console.log(typeof temp_total, Number(Number(emiPrice).toFixed(2)), "carttttt");
+      temp_total = emiPrice ? parseInt(emiPrice) : temp_total;
       setCheckout((prevState) => ({
         ...prevState,
         total_amount: temp_total,
@@ -141,6 +153,7 @@ const Checkout = () => {
       }));
     }
   }, [cartList, discount, product]);
+
   const getCartInfo = () => {
     CartService.getCartInfo()
       .then((res) => {
@@ -152,6 +165,7 @@ const Checkout = () => {
         setCartList([]);
       });
   };
+
   const validateTransaction = (data) => {
     CartService.validateTransaction(data)
       .then((res) => {
@@ -200,7 +214,6 @@ const Checkout = () => {
         }
       })
       .catch((e) => {
-        console.log("Error:::", e);
         setCartList([]);
       });
   };
@@ -344,7 +357,6 @@ const Checkout = () => {
                             ...prevState,
                             country: e.target.value
                           }));
-                          console.log(checkout);
                         }}
                       >
                         <option value={null}>Select Country</option>
@@ -530,7 +542,7 @@ const Checkout = () => {
                             </td>
                           </tr>
                         </>
-                      ) : (
+                      ) : userVerificationcheck ? (
                         <>
                           <tr>
                             <td>
@@ -545,8 +557,14 @@ const Checkout = () => {
                               <strong>This Month Emi:</strong>
                             </td>
                             <td>
-                              <strong>INR {emiPrice}</strong>
+                              <strong>INR {parseInt(emiPrice).toFixed(2)}</strong>
                             </td>
+                          </tr>
+                        </>
+                      ) : (
+                        <>
+                          <tr>
+                            <td>You are not an authorized user for the emi offer</td>
                           </tr>
                         </>
                       )}

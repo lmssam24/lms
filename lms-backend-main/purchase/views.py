@@ -32,6 +32,7 @@ class CartOperations(APIView):
             return Response({"message": "Selected product already exist in cart"}, status=409)
 
         serializer = CartCreate(data=request.data)
+        print(serializer, "serializerserializer")
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Cart Updated", "data": serializer.data}, status=200)
