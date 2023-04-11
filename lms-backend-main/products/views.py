@@ -24,21 +24,27 @@ class GetCourseDetails(APIView):
         if course_id:
             try:
                 course_detail = CourseDetails.objects.filter(
-                    course=course_id, is_deleted=False)
+                    course=course_id, is_deleted=False, mysql_id__isnull=True)
                 serializer = CourseDetailsGet(course_detail, many=True)
                 return Response({"message": "Success", "data": serializer.data}, status=200)
             except CourseDetails.DoesNotExist:
                 return Response({"message": "Invalid category"}, status=400)
         elif category_id is None:
-            course_details = CourseDetails.objects.filter(is_deleted=False)
+            if self.request.user.is_superuser:
+                course_details = CourseDetails.objects.filter(
+                    is_deleted=False)
+            else:
+                course_details = CourseDetails.objects.filter(
+                    is_deleted=False, mysql_id__isnull=True)
             serializer = CourseDetailsGet(course_details, many=True)
 
             return Response({"message": "Success", "data": serializer.data}, status=200)
         else:
             try:
                 course_detail = CourseDetails.objects.filter(
-                    category=category_id, is_deleted=False)
-                serializer = CourseDetailsGet(course_detail, many=True)
+                    category=category_id, is_deleted=False, mysql_id__isnull=True)
+                serializer = CourseDetailsGet(
+                    course_detail, many=True)
                 return Response({"message": "Success", "data": serializer.data}, status=200)
             except CourseDetails.DoesNotExist:
                 return Response({"message": "Invalid category"}, status=400)

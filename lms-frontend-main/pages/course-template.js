@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import PageBanner from "../src/components/PageBanner";
-import Layout from "../src/layout/Layout";
-import TokenService from "./api/token.service";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import api from "../pages/api/api.js";
-import AdminService from "./api/admin.service";
-import FacultyService from "./api/faculty.service";
-import CartService from "./api/cart.service";
-import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { IsAuthenticatedOrRedirect } from "../src/utils";
-import EnquiryModal from "../src/components/EnquiryModal";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuid } from "uuid";
-import { useRouter } from "next/router";
+import api from "../pages/api/api.js";
+import EnquiryModal from "../src/components/EnquiryModal";
+import PageBanner from "../src/components/PageBanner";
+import Layout from "../src/layout/Layout";
+import { IsAuthenticatedOrRedirect } from "../src/utils";
+import AdminService from "./api/admin.service";
+import CartService from "./api/cart.service";
+import FacultyService from "./api/faculty.service";
 const tempData = {
   category: "Data Analytics and Visualisation",
-  title: "Data Management with Excel for Effective Public Service Delivery (E4PSD)",
+  title:
+    "Data Management with Excel for Effective Public Service Delivery (E4PSD)",
   batch: {
     name: "Excel Skills for DataAnalytics and Visualisation",
     slots: [
@@ -26,30 +26,30 @@ const tempData = {
         frequency: "Mon - Fri (18days)",
         Timing: "Timing - 08:30 PM to 10:30 PM (IST)",
         soldout: true,
-        weekendbatch: false
+        weekendbatch: false,
       },
       {
         startDate: "Nov 10th",
         frequency: "Sat - Sun (8days)",
         Timing: "Timing - 07:70 AM to 08:30 AM (IST)",
         soldout: false,
-        weekendbatch: true
+        weekendbatch: true,
       },
       {
         startDate: "Nov 16th",
         frequency: "Mon - Fri (18days)",
         Timing: "Timing - 08:30 PM to 10:30 PM (IST)",
         soldout: true,
-        weekendbatch: false
+        weekendbatch: false,
       },
       {
         startDate: "Nov 20th",
         frequency: "Sat - Sun (6days)",
         Timing: "Timing - 07:70 AM to 08:30 AM (IST)",
         soldout: false,
-        weekendbatch: true
-      }
-    ]
+        weekendbatch: true,
+      },
+    ],
   },
   curriculumLink: "Dev/Material/Course/1/4/1669142263000_c1.svg",
   image1: "/assets/images/coachs/Excel.png",
@@ -59,17 +59,19 @@ const tempData = {
     "Data capacities are expressed in the ability to collect relevant data, that is accurate, manage & store data effectively to process data, and analyze & visualize data for quick and effective decision -making. This course hopes to enable development actors - working in public delivery systems & social sector organizations to manage & analyze data through the entire course of an organization's data cycle. As a common spreadsheet, MS-Excel is a handy tool for managers in facilitating everyday data analysis. Professionals well-versed in MS-Excel can greatly enhance the effectiveness of data-based analytics in a cost-efficient manner.",
   para3:
     "Professionals working in public service delivery, or social sector organizations will find this course useful to monitor program progress and support strategic decision-making. This course will enable professionals to understand data fundamentals, acquaint themselves with different data typologies, collect good quality & relevant data, and analyze, visualize, and report data to support organizations to enhance public service delivery.",
-  targetAudience: "Professionals working in public service delivery. or social sector organizations",
-  timeCommitment: "4-5 weeks of classroom work, 8-10 hours of self-paced reading material & practicum",
+  targetAudience:
+    "Professionals working in public service delivery. or social sector organizations",
+  timeCommitment:
+    "4-5 weeks of classroom work, 8-10 hours of self-paced reading material & practicum",
   module: [
     {
       title: "Data fundamentals",
-      points: ["What is Data", "Data types"]
+      points: ["What is Data", "Data types"],
     },
     {
       title: "Frame works for Effective Public Service Delivery",
-      points: ["The Data Cycle", "Setting up data-architecture"]
-    }
+      points: ["The Data Cycle", "Setting up data-architecture"],
+    },
   ],
   instructorId: 1,
   vidThumb: "",
@@ -82,7 +84,7 @@ const tempData = {
   twitter: "",
   facebook: "",
   instagram: "",
-  pinterst: ""
+  pinterst: "",
 };
 function CourseTemplate() {
   const [templateData, setTemplateData] = useState({});
@@ -97,6 +99,7 @@ function CourseTemplate() {
       let params = getQueryStringParams(window.location.search);
       if (res.status === 200) {
         setCourses(res.data.data);
+        console.log(res.data.data);
         setCurrentCourseId(params.id);
       }
     });
@@ -122,11 +125,15 @@ function CourseTemplate() {
 
   const getQueryStringParams = (query) => {
     return query
-      ? (/^[?#]/.test(query) ? query.slice(1) : query).split("&").reduce((params, param) => {
-          let [key, value] = param.split("=");
-          params[key] = value ? decodeURIComponent(value.replace(/\+/g, " ")) : "";
-          return params;
-        }, {})
+      ? (/^[?#]/.test(query) ? query.slice(1) : query)
+          .split("&")
+          .reduce((params, param) => {
+            let [key, value] = param.split("=");
+            params[key] = value
+              ? decodeURIComponent(value.replace(/\+/g, " "))
+              : "";
+            return params;
+          }, {})
       : {};
   };
   function CardMap() {
@@ -140,13 +147,23 @@ function CourseTemplate() {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={index.toString()}>
               <Card.Body>
-                <div className="w-100" style={{ display: "flex", flexFlow: "wrap-reverse", flexWrap: "wrap" }}>
+                <div
+                  className="w-100"
+                  style={{
+                    display: "flex",
+                    flexFlow: "wrap-reverse",
+                    flexWrap: "wrap",
+                  }}
+                >
                   <ul className="p-15">
                     {element &&
                       element.points &&
                       element.points.map((point) => {
                         return (
-                          <li key={"course_map_" + uuid()} style={{ listStyleType: "disc" }}>
+                          <li
+                            key={"course_map_" + uuid()}
+                            style={{ listStyleType: "disc" }}
+                          >
                             {" "}
                             {point}
                           </li>
@@ -176,7 +193,20 @@ function CourseTemplate() {
   }
 
   function getFormatedStartDate(slotSatrtDate) {
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
     let sd = new Date(slotSatrtDate);
     let monthName = monthNames[sd.getMonth()];
     let date = sd.getDate();
@@ -216,7 +246,10 @@ function CourseTemplate() {
             <div className="col-lg-8">
               <div className="wow fadeInUp delay-0-4s cardView m-0">
                 <div className="row">
-                  <span style={{ color: "#1e4dd7", fontWeight: "800" }} className="px-15 w-100">
+                  <span
+                    style={{ color: "#1e4dd7", fontWeight: "800" }}
+                    className="px-15 w-100"
+                  >
                     {getCategoryName(templateData?.category)}
                   </span>
                   <h3 className="px-15 w-100">{templateData?.title}</h3>
@@ -236,7 +269,16 @@ function CourseTemplate() {
                                 templateData?.batch.slots.map((slot, ind) => {
                                   return (
                                     <>
-                                      <tr key={"t" + ind} style={{ border: "1px solid #eee", position: "relative", background: slot.soldout ? "#eaeaea" : "" }}>
+                                      <tr
+                                        key={"t" + ind}
+                                        style={{
+                                          border: "1px solid #eee",
+                                          position: "relative",
+                                          background: slot.soldout
+                                            ? "#eaeaea"
+                                            : "",
+                                        }}
+                                      >
                                         <td width={"15%"} className="p-10">
                                           {getFormatedStartDate(slot.startDate)}
                                         </td>{" "}
@@ -244,10 +286,24 @@ function CourseTemplate() {
                                           |
                                         </td>
                                         <td width={"30%"} className="p-10">
-                                          {slot.weekendbatch && <span className="weekEndLabel">Weekend batch</span>} {slot.frequency}{" "}
+                                          {slot.weekendbatch && (
+                                            <span className="weekEndLabel">
+                                              Weekend batch
+                                            </span>
+                                          )}{" "}
+                                          {slot.frequency}{" "}
                                         </td>
                                         <td width={"50%"} className="p-10">
-                                          {slot.soldout && <span className="soldOutLabel">sold out</span>} {"Timing - " + slot.Timing1 + " to " + slot.Timing2 + " (IST)"}
+                                          {slot.soldout && (
+                                            <span className="soldOutLabel">
+                                              sold out
+                                            </span>
+                                          )}{" "}
+                                          {"Timing - " +
+                                            slot.Timing1 +
+                                            " to " +
+                                            slot.Timing2 +
+                                            " (IST)"}
                                         </td>
                                       </tr>
                                     </>
@@ -261,14 +317,32 @@ function CourseTemplate() {
                   </div>
                   {templateData?.curriculum_link && (
                     <div className="w-100 p-15">
-                      <div className="float-right pr-3 cursorPointer" style={{ border: "1px solid #254ec4" }} onClick={() => downloadMaterial(templateData?.curriculum_link)}>
-                        <img src="/assets/images/features/icon11.png" alt="" width="20" className="rounded m-10" />
-                        <span style={{ color: "#1e4dd7" }}>Download Curriculum</span>
+                      <div
+                        className="float-right pr-3 cursorPointer"
+                        style={{ border: "1px solid #254ec4" }}
+                        onClick={() =>
+                          downloadMaterial(templateData?.curriculum_link)
+                        }
+                      >
+                        <img
+                          src="/assets/images/features/icon11.png"
+                          alt=""
+                          width="20"
+                          className="rounded m-10"
+                        />
+                        <span style={{ color: "#1e4dd7" }}>
+                          Download Curriculum
+                        </span>
                       </div>
                     </div>
                   )}
                   <hr />
-                  {templateData?.image_1 && <img className="w-100 mt-45 mb-10 p-15" src={getImgSrc(templateData?.image_1)} />}
+                  {templateData?.image_1 && (
+                    <img
+                      className="w-100 mt-45 mb-10 p-15"
+                      src={getImgSrc(templateData?.image_1)}
+                    />
+                  )}
                   <p className="p-15">{templateData?.para_1}</p>
                   <p className="p-15">{templateData?.para_2}</p>
                   <p className="p-15">{templateData?.para_3}</p>
@@ -277,7 +351,8 @@ function CourseTemplate() {
                   <div className="w-100 p-15">
                     <h4 className="">Target Audience</h4>
                     <p className="">
-                      <i className="far fa-hand-point-right"></i> {templateData?.target_audience}
+                      <i className="far fa-hand-point-right"></i>{" "}
+                      {templateData?.target_audience}
                     </p>
                   </div>
                   <hr />
@@ -285,7 +360,8 @@ function CourseTemplate() {
                   <div className="w-100 p-15">
                     <h4>Time Commitment</h4>
                     <p className="">
-                      <i className="far fa-hand-point-right"></i> {templateData?.time_commitment}
+                      <i className="far fa-hand-point-right"></i>{" "}
+                      {templateData?.time_commitment}
                     </p>
                   </div>
                   <hr />
@@ -311,44 +387,60 @@ function CourseTemplate() {
             <div className="col-lg-4">
               <div className="course-sidebar rmb-55">
                 <div className="wow fadeInUp delay-0-4s cardView m-0">
-                  <img src="/assets/images/video/video-section-bg.jpg" alt="" className="rounded " />
+                  <img
+                    src="/assets/images/video/video-section-bg.jpg"
+                    alt=""
+                    className="rounded "
+                  />
                   <h3 className="p-15" style={{ color: "#00c07a" }}>
                     INR {templateData?.price?.price}
                   </h3>
                   <hr />
                   <div className="flex-Just-between">
                     <span className="w-50">
-                      <i className="far fa-file-alt lightBlueIcon" /> Course Level
+                      <i className="far fa-file-alt lightBlueIcon" /> Course
+                      Level
                     </span>
-                    <span className="w-50 text-right font-weight-bolder">{templateData?.course_level}</span>
+                    <span className="w-50 text-right font-weight-bolder">
+                      {templateData?.course_level}
+                    </span>
                   </div>
                   <hr />
                   <div className="flex-Just-between">
                     <span className="w-50">
                       <i className="far fa-clock lightBlueIcon" /> Duration{" "}
                     </span>
-                    <span className="w-50 text-right font-weight-bolder">{templateData?.duration}</span>
+                    <span className="w-50 text-right font-weight-bolder">
+                      {templateData?.duration}
+                    </span>
                   </div>
                   <hr />
                   <div className="flex-Just-between">
                     <span className="w-50">
-                      <i className="far fa-play-circle lightBlueIcon" /> Lectures{" "}
+                      <i className="far fa-play-circle lightBlueIcon" />{" "}
+                      Lectures{" "}
                     </span>
-                    <span className="w-50 text-right font-weight-bolder">{templateData?.lectures}</span>
+                    <span className="w-50 text-right font-weight-bolder">
+                      {templateData?.lectures}
+                    </span>
                   </div>
                   <hr />
                   <div className="flex-Just-between">
                     <span className="w-50">
                       <i className="far fa-clipboard lightBlueIcon" /> Subject{" "}
                     </span>
-                    <span className="w-50 text-right font-weight-bolder">{templateData?.subject}</span>
+                    <span className="w-50 text-right font-weight-bolder">
+                      {templateData?.subject}
+                    </span>
                   </div>
                   <hr />
                   <div className="flex-Just-between">
                     <span className="w-50">
                       <i className="fas fa-globe lightBlueIcon" /> Language{" "}
                     </span>
-                    <span className="w-50 text-right font-weight-bolder">{templateData?.language}</span>
+                    <span className="w-50 text-right font-weight-bolder">
+                      {templateData?.language}
+                    </span>
                   </div>
                   <hr />
                   <div className="flex-Just-Center">
@@ -395,7 +487,12 @@ function CourseTemplate() {
         </div>
       </section>
       <ToastContainer autoClose={2000} />
-      <EnquiryModal toast={toast} setEnquiryModal={setEnquiryModal} showModal={enquiryModal} enquiryCourse={enquiryCourse} />
+      <EnquiryModal
+        toast={toast}
+        setEnquiryModal={setEnquiryModal}
+        showModal={enquiryModal}
+        enquiryCourse={enquiryCourse}
+      />
     </Layout>
   );
 }

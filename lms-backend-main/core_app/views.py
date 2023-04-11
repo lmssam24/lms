@@ -1716,3 +1716,18 @@ class StudentEmiOption(APIView):
                 return Response({"message": "Problem", "data": serializer.data}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": f"No student with given id = {student_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CheckIfExists(APIView):
+    def get(self, request, username):
+        try:
+            student = Student.objects.filter(user__username=username)
+            if student.exists():
+                if StudentCourse.objects.filter(student=student[0]).exists():
+                    return Response({"message": "Student is enrolled"}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"message": "Student is not enrolled"}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({"message": "No such Student exits"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(e)

@@ -3,7 +3,7 @@ import time
 import uuid
 
 from core_app.aws_interface import get_assessment_files, upload_assessment_file
-from core_app.models import StudentCourse
+from core_app.models import Student, StudentCourse
 from core_app.serializers import StudentCourseSerializer
 # Create your views here.
 from django.conf import settings
@@ -187,6 +187,8 @@ class GetPaymentUrl(APIView):
             encrypted_data, settings.CC_AVENUE_ACCESS_CODE)
         return Response({"message": "no content", "payment_url": payment_url}, status=200)
 
+# Added StudentEnroll
+
 
 class DoCheckout(APIView):
     permission_classes = [IsAuthenticated]
@@ -216,14 +218,20 @@ class DoCheckout(APIView):
             if transaction_info_serializer.is_valid():
                 transaction_info_serializer.save()
                 order_items = []
+                courses_enroll = []
                 for p in data['cart']:
                     order_items.append(
                         {"user": request.user.id, "order_id": transaction_id, "product_id": p['product']['course']['id']})
+                    courses_enroll.append(
+                        {"student_id": Student.objects.get(user__id=request.user.id), "course_id": p['product']['course']['id'], "teacher_id": p['product']['course']['teacher']})
                 order_items_serializer = OrderItems(
                     data=order_items, many=True)
-                if order_items_serializer.is_valid():
+                enroll_student_serializer = StudentCourseSerializer(
+                    data=courses_enroll, many=True)
 
+                if order_items_serializer.is_valid():
                     order_items_serializer.save()
+                    enroll_student_serializer.save()
                     return Response({"message": "Success", "payment_url": payment_url}, status=200)
                 else:
                     return Response({"message": "Invalid Data1", "error": order_items_serializer.errors}, status=400)

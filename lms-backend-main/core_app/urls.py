@@ -98,6 +98,6 @@ urlpatterns = [
          TakeAllStudentsAttendance.as_view()),
 
     path('generate_video_upload', GenerateVideoUploadLink.as_view()),
-
+    path("check_if_enrolled/<str:username>/", CheckIfExists.as_view()),
     path('', include(router.urls)),
 ]
