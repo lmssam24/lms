@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import FacultyService from "../../pages/api/faculty.service";
 import LinkGenerated from "./LinkGenerated";
-function CreateEmiOffer() {
+import UserService from "../../pages/api/user.service";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
+function CreateEmiOffer({ id, emi_option }) {
   const [courseList, setCourseList] = useState([]);
   const [course, setCourse] = useState("");
   // var [emiOffer, setEmiOffer] = useState("");
   var [emiOfferInMonth, setEmiOfferInMonth] = useState("");
   let [inputfields, setInputfields] = useState([]);
-  let [requestForLink, setRequestForGeneratingTheLink] = useState(false);
-
+  const router = useRouter();
+  // emi_option["83"] = 2;
   useEffect(() => {
     FacultyService.listCourse().then((res) => {
       if (res && res.data && res.data.data) {
@@ -50,9 +54,25 @@ function CreateEmiOffer() {
     if (e && e.target.value) setCourse(e.target.value);
   }
 
-  const submitEmiData = (e) => {
+  const submitEmiData = async (e) => {
     e.preventDefault();
-    // console.log(e.target[1].value, "balajeeeeee");
+    if (!course || !emiOfferInMonth) {
+      return toast.error("Please enter all the field first");
+    }
+
+    if (emi_option == null) {
+      emi_option = {};
+      emi_option[course] = emiOfferInMonth;
+    } else if (emi_option) {
+      emi_option[course] = emiOfferInMonth;
+    }
+    const response = await UserService.giveEmiOfferToUser(id, emi_option);
+    if (response.status == 200) {
+      toast.success("Emi offer given Successfully");
+      return router.push("/admin-dashboard");
+    } else {
+      return toast.success("Something went wrong, Please try again");
+    }
   };
 
   return (
@@ -87,7 +107,7 @@ function CreateEmiOffer() {
             submit
           </button>
         </form>
-        <button
+        {/* <button
           className="btn btn-primary my-3 button-style"
           type="submit"
           onClick={() => {
@@ -96,8 +116,9 @@ function CreateEmiOffer() {
         >
           Generate Link
         </button>
-        {requestForLink && <LinkGenerated />}
+        {requestForLink && <LinkGenerated />} */}
       </div>
+      <ToastContainer autoClose={2000} />
     </>
   );
 }

@@ -102,7 +102,6 @@ const deleteCoupon = async (id) => {
 //   });
 // };
 const checkout = (data) => {
-  console.log(data, "datasss ");
   return api
     .post("/checkout", {
       ...data,

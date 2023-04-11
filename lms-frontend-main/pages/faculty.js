@@ -13,14 +13,13 @@ function FacLayout({ children }) {
     { name: "Add Quiz Question", link: "faculty-add-quiz-questions", icon: "far fa-list-alt" },
     { name: "Add Assignment", link: "faculty-add-assignment", icon: "fas fa-book-reader" },
     { name: "Grade Assignment", link: "faculty-grade-assignment", icon: "fas fa-list-ol" },
-    { name: "Create live class", link: "faculty-create-meet", icon: "fas fa-video" },
-    { name: "View previous recorded class", link: "view-recordings", icon: "fas fa-bars" },
+    { name: "Create Live Class", link: "faculty-create-meet", icon: "fas fa-video" },
+    { name: "View Previous Recorded Class", link: "view-recordings", icon: "fas fa-bars" },
     { name: "Upload Video", link: "upload-video", icon: "fas fa-video" },
     { name: "Attendance", link: "attendance", icon: "fas fa-clock" }
   ];
   const router = useRouter();
 
-  
   useEffect(() => {
     // Perform localStorage action
     const token = TokenService.getLocalAccessToken();

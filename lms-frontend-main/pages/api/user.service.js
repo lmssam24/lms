@@ -96,6 +96,16 @@ const findUser = (username) => {
       return error;
     });
 };
+const giveEmiOfferToUser = (studentId, emi_option) => {
+  return api
+    .put(`student_emi_option/${studentId}`, { emi_option })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
 
 const UserService = {
   getAssignmentList,
@@ -105,7 +115,8 @@ const UserService = {
   submitQuiz,
   uploadStudentAssignemnt,
   getAssignmentMaterialList,
-  findUser
+  findUser,
+  giveEmiOfferToUser
 };
 
 export default UserService;
