@@ -27,7 +27,6 @@ const editCourse = (courseData) => {
 };
 
 const uploadAssets = (data) => {
-  console.log("data", data);
   let path = "/assets";
   return api
     .post(path, data, {

@@ -11,19 +11,19 @@ import Cookies from "js-cookie";
 const Login = () => {
   const [input, setInput] = useState({
     username: "",
-    password: "",
+    password: ""
   });
 
   const [error, setError] = useState({
     username: "",
-    password: "",
+    password: ""
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
     validateInput(e);
   };
@@ -58,7 +58,7 @@ const Login = () => {
       setError((prev) => ({
         ...prev,
         username: "Please enter email !",
-        password: "Please enter password !",
+        password: "Please enter password !"
       }));
       return;
     }
