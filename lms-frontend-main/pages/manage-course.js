@@ -13,7 +13,7 @@ const initialSlotDetails = {
   frequency: "",
   Timing: "",
   soldout: false,
-  weekendbatch: false
+  weekendbatch: false,
 };
 const initialModDetails = {
   title: "",
@@ -22,7 +22,7 @@ const initialModDetails = {
   point3: "",
   point4: "",
   point5: "",
-  point6: ""
+  point6: "",
 };
 
 function AddCourseDetails(props) {
@@ -44,7 +44,7 @@ function AddCourseDetails(props) {
     Timing1: "",
     Timing2: "",
     soldout: false,
-    weekendbatch: false
+    weekendbatch: false,
   });
   const [moduleDetails, setModuleDetails] = useState({
     id: "",
@@ -54,7 +54,7 @@ function AddCourseDetails(props) {
     point3: "",
     point4: "",
     point5: "",
-    point6: ""
+    point6: "",
   });
 
   const [courseDetails, setCourseDetails] = useState({
@@ -84,7 +84,7 @@ function AddCourseDetails(props) {
     batch: "",
     module: "",
     meeting_link: "",
-    meeting_pwd: ""
+    meeting_pwd: "",
   });
   const [pointsList, setPointsList] = useState({});
 
@@ -109,12 +109,12 @@ function AddCourseDetails(props) {
     if (type === "slot") {
       setSlotDetails((prevState) => ({
         ...prevState,
-        [name]: value
+        [name]: value,
       }));
     } else {
       setModuleDetails((prevState) => ({
         ...prevState,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -123,7 +123,8 @@ function AddCourseDetails(props) {
     e.preventDefault();
     let sc = moduleContent;
     let id = uuid();
-    let { title, point1, point2, point3, point4, point5, point6 } = moduleDetails;
+    let { title, point1, point2, point3, point4, point5, point6 } =
+      moduleDetails;
     if (!title || !point1) return;
     let pointsArr = [];
     if (point1) pointsArr.push(point1);
@@ -135,7 +136,7 @@ function AddCourseDetails(props) {
     let s = {
       id: id,
       title: title,
-      points: pointsArr
+      points: pointsArr,
     };
     sc.push(s);
     setModuleContent(sc);
@@ -148,7 +149,8 @@ function AddCourseDetails(props) {
     e.preventDefault();
     let sc = slotsContent;
     let id = uuid();
-    let { startDate, frequency, Timing1, Timing2, soldout, weekendbatch } = slotDetails;
+    let { startDate, frequency, Timing1, Timing2, soldout, weekendbatch } =
+      slotDetails;
     if (!startDate || !frequency || !Timing1 || !Timing2) return;
     let s = {
       id: id,
@@ -157,7 +159,7 @@ function AddCourseDetails(props) {
       Timing1: Timing1,
       Timing2: Timing2,
       soldout: soldout,
-      weekendbatch: weekendbatch
+      weekendbatch: weekendbatch,
     };
     sc.push(s);
     setSlotsContent(sc);
@@ -179,7 +181,15 @@ function AddCourseDetails(props) {
     let point4 = item?.points[3];
     let point5 = item?.points[4];
     let point6 = item?.points[5];
-    setModuleDetails({ ...item, point1, point2, point3, point4, point5, point6 });
+    setModuleDetails({
+      ...item,
+      point1,
+      point2,
+      point3,
+      point4,
+      point5,
+      point6,
+    });
     setDeleteMod(true);
     setModModalToggle(true);
   }
@@ -220,24 +230,29 @@ function AddCourseDetails(props) {
     if (type === "img") {
       setCourseDetails((prevState) => ({
         ...prevState,
-        [name]: e.target.files[0]
+        [name]: e.target.files[0],
       }));
     } else {
       setCourseDetails((prevState) => ({
         ...prevState,
-        [name]: value
+        [name]: value,
       }));
     }
   }
 
   const fetchApis = async (file1Data, file2Data, file3Data, cd) => {
     try {
-      const res = await Promise.all([AdminService.uploadAssets(file1Data), AdminService.uploadAssets(file2Data), AdminService.uploadAssets(file3Data)]);
+      const res = await Promise.all([
+        AdminService.uploadAssets(file1Data),
+        AdminService.uploadAssets(file2Data),
+        AdminService.uploadAssets(file3Data),
+      ]);
       const data = res.map((res) => res.data);
       const status = res.map((res) => res.status);
       cd.image_1 = data[0]?.key;
       cd.curriculum_link = data[1]?.key;
       cd.instructor_image = data[2]?.key;
+      console.log(cd);
       AdminService.addCourse(cd).then((res) => {
         if (res?.status === 200) {
           props.cb(res.data.data);
@@ -280,14 +295,26 @@ function AddCourseDetails(props) {
             }}
           >
             <div className="row m-3">
-              <form name="slot" onSubmit={(e) => addSlotHandle(e)} autoComplete="off" className="w-100">
+              <form
+                name="slot"
+                onSubmit={(e) => addSlotHandle(e)}
+                autoComplete="off"
+                className="w-100"
+              >
                 <div className="w-100">
                   <Form.Group as={Row} controlId="formPlaintextSd">
                     <Form.Label column sm="4">
                       Start Date
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="startDate" type="date" value={slotDetails.startDate} placeholder="Start Date" />
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="startDate"
+                        type="date"
+                        value={slotDetails.startDate}
+                        placeholder="Start Date"
+                      />
                     </Col>
                   </Form.Group>
 
@@ -296,8 +323,17 @@ function AddCourseDetails(props) {
                       Frequency
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="frequency" type="text" value={slotDetails.frequency} placeholder="Start day - End day (No.of days)" />
-                      <span style={{ fontSize: "10px", fontWeight: "700" }}>Hint: Mon - Fri (18Days)</span>
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="frequency"
+                        type="text"
+                        value={slotDetails.frequency}
+                        placeholder="Start day - End day (No.of days)"
+                      />
+                      <span style={{ fontSize: "10px", fontWeight: "700" }}>
+                        Hint: Mon - Fri (18Days)
+                      </span>
                     </Col>
                   </Form.Group>
 
@@ -306,10 +342,24 @@ function AddCourseDetails(props) {
                       Timings
                     </Form.Label>
                     <Col sm="4">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="Timing1" type="time" value={slotDetails.Timing1} placeholder="Timings" />
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="Timing1"
+                        type="time"
+                        value={slotDetails.Timing1}
+                        placeholder="Timings"
+                      />
                     </Col>
                     <Col sm="4">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="Timing2" type="time" value={slotDetails.Timing2} placeholder="Timings" />
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="Timing2"
+                        type="time"
+                        value={slotDetails.Timing2}
+                        placeholder="Timings"
+                      />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row} controlId="formPlaintextso">
@@ -317,7 +367,13 @@ function AddCourseDetails(props) {
                       Soldout
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="soldout" value={slotDetails.soldout} as="select">
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="soldout"
+                        value={slotDetails.soldout}
+                        as="select"
+                      >
                         <option>No</option>
                         <option>Yes</option>
                       </Form.Control>
@@ -328,7 +384,13 @@ function AddCourseDetails(props) {
                       Weekend Batch
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "slot")} name="weekendbatch" as="select" value={slotDetails.weekendbatch}>
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "slot")}
+                        name="weekendbatch"
+                        as="select"
+                        value={slotDetails.weekendbatch}
+                      >
                         <option>No</option>
                         <option>Yes</option>
                       </Form.Control>
@@ -362,14 +424,26 @@ function AddCourseDetails(props) {
             }}
           >
             <div className="row m-3">
-              <form name="module" onSubmit={(e) => addModuleHandle(e)} autoComplete="off" className="w-100">
+              <form
+                name="module"
+                onSubmit={(e) => addModuleHandle(e)}
+                autoComplete="off"
+                className="w-100"
+              >
                 <div className="w-100">
                   <Form.Group as={Row} controlId="formPlaintextModTitle">
                     <Form.Label column sm="4">
                       Title
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "module")} name="title" type="text" value={moduleDetails.title} placeholder="Module Title" />
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "module")}
+                        name="title"
+                        type="text"
+                        value={moduleDetails.title}
+                        placeholder="Module Title"
+                      />
                     </Col>
                   </Form.Group>
 
@@ -378,12 +452,49 @@ function AddCourseDetails(props) {
                       Points
                     </Form.Label>
                     <Col sm="8">
-                      <Form.Control required onChange={(e) => handleChange(e, "module")} name="point1" value={moduleDetails.point1} type="text" placeholder="Add points/details" />
-                      <Form.Control onChange={(e) => handleChange(e, "module")} name="point2" value={moduleDetails.point2} type="text" placeholder="Add points/details" />
-                      <Form.Control onChange={(e) => handleChange(e, "module")} name="point3" value={moduleDetails.point3} type="text" placeholder="Add points/details" />
-                      <Form.Control onChange={(e) => handleChange(e, "module")} name="point4" value={moduleDetails.point4} type="text" placeholder="Add points/details" />
-                      <Form.Control onChange={(e) => handleChange(e, "module")} name="point5" value={moduleDetails.point5} type="text" placeholder="Add points/details" />
-                      <Form.Control onChange={(e) => handleChange(e, "module")} name="point6" value={moduleDetails.point6} type="text" placeholder="Add points/details" />
+                      <Form.Control
+                        required
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point1"
+                        value={moduleDetails.point1}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
+                      <Form.Control
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point2"
+                        value={moduleDetails.point2}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
+                      <Form.Control
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point3"
+                        value={moduleDetails.point3}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
+                      <Form.Control
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point4"
+                        value={moduleDetails.point4}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
+                      <Form.Control
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point5"
+                        value={moduleDetails.point5}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
+                      <Form.Control
+                        onChange={(e) => handleChange(e, "module")}
+                        name="point6"
+                        value={moduleDetails.point6}
+                        type="text"
+                        placeholder="Add points/details"
+                      />
                     </Col>
                   </Form.Group>
 
@@ -410,7 +521,12 @@ function AddCourseDetails(props) {
                 Course Category
               </Form.Label>
               <Col sm="5">
-                <Form.Control required as="select" name="category" onChange={(e) => handleFormBuilder(e)}>
+                <Form.Control
+                  required
+                  as="select"
+                  name="category"
+                  onChange={(e) => handleFormBuilder(e)}
+                >
                   <option value="">Select Course Category</option>
                   {courseCateogeries.length > 0 &&
                     courseCateogeries.map((element) => {
@@ -429,7 +545,13 @@ function AddCourseDetails(props) {
                 Title
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="title" type="text" required placeholder="Title of Course" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="title"
+                  type="text"
+                  required
+                  placeholder="Title of Course"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -438,7 +560,12 @@ function AddCourseDetails(props) {
                 Batch Name
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="batch_name" type="text" placeholder="Batch Name" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="batch_name"
+                  type="text"
+                  placeholder="Batch Name"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -478,7 +605,13 @@ function AddCourseDetails(props) {
                 Banner Image
               </Form.Label>
               <Col sm="5">
-                <Form.File className="position-relative" required name="imageFile" onChange={(e) => handleFormBuilder(e, "img")} feedbackTooltip />
+                <Form.File
+                  className="position-relative"
+                  required
+                  name="imageFile"
+                  onChange={(e) => handleFormBuilder(e, "img")}
+                  feedbackTooltip
+                />
               </Col>
             </Form.Group>
 
@@ -487,7 +620,13 @@ function AddCourseDetails(props) {
                 Curriculum Document
               </Form.Label>
               <Col sm="5">
-                <Form.File className="position-relative" required name="curriculumFile" onChange={(e) => handleFormBuilder(e, "img")} feedbackTooltip />
+                <Form.File
+                  className="position-relative"
+                  required
+                  name="curriculumFile"
+                  onChange={(e) => handleFormBuilder(e, "img")}
+                  feedbackTooltip
+                />
               </Col>
             </Form.Group>
 
@@ -496,7 +635,13 @@ function AddCourseDetails(props) {
                 Content 1
               </Form.Label>
               <Col sm="5">
-                <Form.Control required type="text" name="para_1" placeholder="Add Content 1" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  required
+                  type="text"
+                  name="para_1"
+                  placeholder="Add Content 1"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -505,7 +650,12 @@ function AddCourseDetails(props) {
                 Content 2
               </Form.Label>
               <Col sm="5">
-                <Form.Control type="text" name="para_2" placeholder="Add Content 2" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  type="text"
+                  name="para_2"
+                  placeholder="Add Content 2"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -514,7 +664,12 @@ function AddCourseDetails(props) {
                 Content 3
               </Form.Label>
               <Col sm="5">
-                <Form.Control type="text" name="para_3" placeholder="Add Content 3" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  type="text"
+                  name="para_3"
+                  placeholder="Add Content 3"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -523,7 +678,12 @@ function AddCourseDetails(props) {
                 Target Audience
               </Form.Label>
               <Col sm="5">
-                <Form.Control type="text" name="target_audience" placeholder="Target Audience" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  type="text"
+                  name="target_audience"
+                  placeholder="Target Audience"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -532,7 +692,12 @@ function AddCourseDetails(props) {
                 Target Commitment
               </Form.Label>
               <Col sm="5">
-                <Form.Control type="text" name="time_commitment" placeholder="Target Commitment" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  type="text"
+                  name="time_commitment"
+                  placeholder="Target Commitment"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -572,7 +737,12 @@ function AddCourseDetails(props) {
                 Instructor Name
               </Form.Label>
               <Col sm="5">
-                <Form.Control required as="select" name="teacher" onChange={(e) => handleFormBuilder(e)}>
+                <Form.Control
+                  required
+                  as="select"
+                  name="teacher"
+                  onChange={(e) => handleFormBuilder(e)}
+                >
                   <option value="">Select Teacher</option>
                   {teachers.length > 0 &&
                     teachers.map((e) => {
@@ -598,7 +768,12 @@ function AddCourseDetails(props) {
                 Instructor Designation
               </Form.Label>
               <Col sm="5">
-                <Form.Control type="text" name="instructor_designation" placeholder="Instructor Designation" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  type="text"
+                  name="instructor_designation"
+                  placeholder="Instructor Designation"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
             <Form.Group as={Row} controlId="formPlaintextinst">
@@ -606,7 +781,13 @@ function AddCourseDetails(props) {
                 Instructor Profile Picture
               </Form.Label>
               <Col sm="5">
-                <Form.File className="position-relative" required name="instructorImage" onChange={(e) => handleFormBuilder(e, "img")} feedbackTooltip />
+                <Form.File
+                  className="position-relative"
+                  required
+                  name="instructorImage"
+                  onChange={(e) => handleFormBuilder(e, "img")}
+                  feedbackTooltip
+                />
               </Col>
             </Form.Group>
             {/* <Form.Group as={Row} controlId="formPlaintextthumb">
@@ -622,7 +803,13 @@ function AddCourseDetails(props) {
                 Course Price
               </Form.Label>
               <Col sm="5">
-                <Form.Control required name="price" type="text" placeholder="Course Price" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  required
+                  name="price"
+                  type="text"
+                  placeholder="Course Price"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -631,7 +818,12 @@ function AddCourseDetails(props) {
                 Course Level
               </Form.Label>
               <Col sm="5">
-                <Form.Control required as="select" name="course_level" onChange={(e) => handleFormBuilder(e)}>
+                <Form.Control
+                  required
+                  as="select"
+                  name="course_level"
+                  onChange={(e) => handleFormBuilder(e)}
+                >
                   <option>Beginner</option>
                   <option>Intermediate</option>
                   <option>Expert</option>
@@ -644,7 +836,13 @@ function AddCourseDetails(props) {
                 Duration of Course
               </Form.Label>
               <Col sm="5">
-                <Form.Control required name="duration" type="text" placeholder="Duration of Course" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  required
+                  name="duration"
+                  type="text"
+                  placeholder="Duration of Course"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -653,7 +851,13 @@ function AddCourseDetails(props) {
                 Lectures
               </Form.Label>
               <Col sm="5">
-                <Form.Control required name="lectures" type="text" placeholder="Total Lectures of Course" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  required
+                  name="lectures"
+                  type="text"
+                  placeholder="Total Lectures of Course"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -662,7 +866,12 @@ function AddCourseDetails(props) {
                 Subject
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="subject" type="text" placeholder="Subject of Course" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="subject"
+                  type="text"
+                  placeholder="Subject of Course"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -671,7 +880,12 @@ function AddCourseDetails(props) {
                 Meeting Link
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="meeting_link" type="text" placeholder="Meeting Link" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="meeting_link"
+                  type="text"
+                  placeholder="Meeting Link"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -680,7 +894,12 @@ function AddCourseDetails(props) {
                 Meeting Passcode
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="meeting_pwd" type="text" placeholder="Meeting Passcode" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="meeting_pwd"
+                  type="text"
+                  placeholder="Meeting Passcode"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -689,7 +908,12 @@ function AddCourseDetails(props) {
                 Language
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="language" type="text" placeholder="Language" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="language"
+                  type="text"
+                  placeholder="Language"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -698,7 +922,12 @@ function AddCourseDetails(props) {
                 Twitter
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="twitter" type="text" placeholder="Twitter profile link" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="twitter"
+                  type="text"
+                  placeholder="Twitter profile link"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -707,7 +936,12 @@ function AddCourseDetails(props) {
                 FaceBook
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="facebook" type="text" placeholder="FaceBook profile link" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="facebook"
+                  type="text"
+                  placeholder="FaceBook profile link"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -716,7 +950,12 @@ function AddCourseDetails(props) {
                 Instagram
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="instagram" type="text" placeholder="Instagram Profile link" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="instagram"
+                  type="text"
+                  placeholder="Instagram Profile link"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
 
@@ -725,7 +964,12 @@ function AddCourseDetails(props) {
                 Pinterest
               </Form.Label>
               <Col sm="5">
-                <Form.Control name="pinterst" type="text" placeholder="Pinterest profile link" onChange={(e) => handleFormBuilder(e)} />
+                <Form.Control
+                  name="pinterst"
+                  type="text"
+                  placeholder="Pinterest profile link"
+                  onChange={(e) => handleFormBuilder(e)}
+                />
               </Col>
             </Form.Group>
             <Button type="submit">Add Course Details</Button>

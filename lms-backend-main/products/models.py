@@ -73,9 +73,10 @@ class CourseDetails(models.Model):
     is_active = models.BooleanField(default=False)
     meeting_link = models.URLField(null=True)
     meeting_pwd = models.CharField(max_length=256, null=True)
+    mysql_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = 'course_details'
 
     def __str__(self):
-        return self.id
+        return str(self.id)

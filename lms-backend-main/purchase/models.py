@@ -1,10 +1,11 @@
 import uuid
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+
 from core_app.models import Course, Student, User
+from coupons.models import Coupon
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from products.models import CourseDetails
 
-from coupons.models import Coupon
 # Create your models here.
 
 
