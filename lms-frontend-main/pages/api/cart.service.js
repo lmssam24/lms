@@ -26,7 +26,7 @@ const deleteCart = (cart_id) => {
 const addToCart = (product) => {
   return api
     .post("/cart", {
-      product
+      product,
     })
     .then((response) => {
       return response;
@@ -48,7 +48,7 @@ const couponVerification = async (couponCode) => {
 const addCoupon = async (couponCode) => {
   return api
     .post("/coupon", {
-      ...couponCode
+      ...couponCode,
     })
     .then((response) => {
       return response;
@@ -60,7 +60,7 @@ const addCoupon = async (couponCode) => {
 const editCoupon = async (couponCode) => {
   return api
     .put(`/coupon/${couponCode.id}`, {
-      ...couponCode
+      ...couponCode,
     })
     .then((response) => {
       return response;
@@ -104,7 +104,7 @@ const deleteCoupon = async (id) => {
 const checkout = (data) => {
   return api
     .post("/checkout", {
-      ...data
+      ...data,
     })
     .then((response) => {
       return response;
@@ -116,7 +116,7 @@ const checkout = (data) => {
 const validateTransaction = (data) => {
   return api
     .post("/validate_transaction", {
-      ...data
+      ...data,
     })
     .then((response) => {
       return response;
@@ -124,6 +124,15 @@ const validateTransaction = (data) => {
     .catch((error) => {
       return error.response;
     });
+};
+
+const wordpressAddToCart = (data) => {
+  try {
+    const response = api.post("/wordpress_cart", { ...data });
+    return response;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 const CartService = {
@@ -136,7 +145,8 @@ const CartService = {
   addCoupon,
   showCoupons,
   editCoupon,
-  deleteCoupon
+  deleteCoupon,
+  wordpressAddToCart,
 };
 
 export default CartService;

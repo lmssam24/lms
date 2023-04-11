@@ -24,21 +24,27 @@ class GetCourseDetails(APIView):
         if course_id:
             try:
                 course_detail = CourseDetails.objects.filter(
-                    course=course_id, is_deleted=False)
+                    course=course_id, is_deleted=False, mysql_id__isnull=True)
                 serializer = CourseDetailsGet(course_detail, many=True)
                 return Response({"message": "Success", "data": serializer.data}, status=200)
             except CourseDetails.DoesNotExist:
                 return Response({"message": "Invalid category"}, status=400)
         elif category_id is None:
-            course_details = CourseDetails.objects.filter(is_deleted=False)
+            if self.request.user.is_superuser:
+                course_details = CourseDetails.objects.filter(
+                    is_deleted=False)
+            else:
+                course_details = CourseDetails.objects.filter(
+                    is_deleted=False, mysql_id__isnull=True)
             serializer = CourseDetailsGet(course_details, many=True)
 
             return Response({"message": "Success", "data": serializer.data}, status=200)
         else:
             try:
                 course_detail = CourseDetails.objects.filter(
-                    category=category_id, is_deleted=False)
-                serializer = CourseDetailsGet(course_detail, many=True)
+                    category=category_id, is_deleted=False, mysql_id__isnull=True)
+                serializer = CourseDetailsGet(
+                    course_detail, many=True)
                 return Response({"message": "Success", "data": serializer.data}, status=200)
             except CourseDetails.DoesNotExist:
                 return Response({"message": "Invalid category"}, status=400)
@@ -81,26 +87,28 @@ class AddCourseDetails(APIView):
         request.data['created_by'] = request.user.id
         request.data['updated_by'] = request.user.id
         request.data['description'] = "None"
-
-        course_serialzer = CourseSerializerList(data=request.data)
-        if course_serialzer.is_valid():
-            course = course_serialzer.save()
-            request.data['course'] = course.id
-            pricing_serializer = CoursePricingGet(data=request.data)
-            if pricing_serializer.is_valid():
-                pricing_data = pricing_serializer.save()
-                request.data['price'] = pricing_data.id
-                course_details_serializer = CourseDetailsCreate(
-                    data=request.data)
-                if course_details_serializer.is_valid():
-                    course_details_serializer.save()
-                    return Response({"message": "course Detail is created", "data": course_details_serializer.data}, status=200)
+        try:
+            course_serialzer = CourseSerializerList(data=request.data)
+            if course_serialzer.is_valid():
+                course = course_serialzer.save()
+                request.data['course'] = course.id
+                pricing_serializer = CoursePricingGet(data=request.data)
+                if pricing_serializer.is_valid():
+                    pricing_data = pricing_serializer.save()
+                    request.data['price'] = pricing_data.id
+                    course_details_serializer = CourseDetailsCreate(
+                        data=request.data)
+                    if course_details_serializer.is_valid():
+                        course_details_serializer.save()
+                        return Response({"message": "course Detail is created", "data": course_details_serializer.data}, status=200)
+                    else:
+                        return Response({"message": "Invalid Data", "errors": course_details_serializer.errors}, status=400)
                 else:
-                    return Response({"message": "Invalid Data", "errors": course_details_serializer.errors}, status=400)
+                    return Response({"message": "Invalid Data", "errors": pricing_serializer.errors}, status=400)
             else:
-                return Response({"message": "Invalid Data", "errors": pricing_serializer.errors}, status=400)
-        else:
-            return Response({"message": "Invalid Data", "errors": course_serialzer.errors}, status=400)
+                return Response({"message": "Invalid Data", "errors": course_serialzer.errors}, status=400)
+        except Exception as e:
+            print(e)
 
     def put(self, request, category_id=None):
         request.data['updated_by'] = request.user.id
