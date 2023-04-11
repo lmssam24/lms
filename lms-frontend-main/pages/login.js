@@ -7,8 +7,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthService from "./api/auth.service";
 import Cookies from "js-cookie";
-
+import CartService from "./api/cart.service";
+import { useRouter } from "next/router";
 const Login = () => {
+  const router = useRouter();
   const [input, setInput] = useState({
     username: "",
     password: ""
@@ -51,6 +53,25 @@ const Login = () => {
     });
   };
 
+  const manageData = (title, price, mysql_id) => {
+    if (title && price && mysql_id) {
+      var data = {
+        title: title,
+        price: price,
+        mysql_id: mysql_id
+      };
+    }
+    CartService.wordpressAddToCart(data)
+      .then((res) => {
+        if (res && res.status === 200) {
+          return router.push("/cart");
+        }
+      })
+      .catch((e) => {
+        console.log("Error:::", e);
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { username, password } = input;
@@ -71,7 +92,17 @@ const Login = () => {
           // if(response.data && response.data.type === "teacher"){
           Cookies.set("type", response.data.type);
           Cookies.set("admin", response.data.admin);
+
+          const url = new URL(window.location.href);
+          if (url.search.length > 0) {
+            var searchParams = url.searchParams;
+            var title = searchParams?.get("title");
+            var price = searchParams?.get("price");
+            var mysql_id = searchParams?.get("mysql_id");
+            manageData(title, price, mysql_id);
+          }
           Router.push("/faculty");
+
           // }
         } else if (response.response.status === 403) {
           toast.error(`Error: ${response.response.data.message}`);

@@ -68,7 +68,6 @@ const Checkout = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(window?.location.href, "window locationnnn okayyy done...");
     const url = new URL(window.location.href);
     if (url.search.length > 0) {
       const searchParams = url.searchParams;
