@@ -6,6 +6,8 @@ import PageBanner from "../src/components/PageBanner";
 import Layout from "../src/layout/Layout";
 import CartService from "./api/cart.service";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Cart = () => {
   const [cartList, setCartList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -152,6 +154,7 @@ const Cart = () => {
           )}
         </div>
       </section>
+      <ToastContainer autoClose={1000} />
     </Layout>
   );
 };

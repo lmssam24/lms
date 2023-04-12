@@ -55,21 +55,25 @@ const Login = () => {
 
   const manageData = (title, price, mysql_id) => {
     if (title && price && mysql_id) {
-      var data = {
+      const data = {
         title: title,
         price: price,
         mysql_id: mysql_id
       };
+      CartService.wordpressAddToCart(data)
+        .then((res) => {
+          if (res && res.status === 200) {
+            toast.success("Course added successfully in cart");
+            // return router.push("/cart");
+          } else if (res.status === 409) {
+            toast.error(res.data.message);
+            return router.push("/cart");
+          }
+        })
+        .catch((e) => {
+          console.log("Error:::", e);
+        });
     }
-    CartService.wordpressAddToCart(data)
-      .then((res) => {
-        if (res && res.status === 200) {
-          return router.push("/cart");
-        }
-      })
-      .catch((e) => {
-        console.log("Error:::", e);
-      });
   };
 
   const handleSubmit = (e) => {

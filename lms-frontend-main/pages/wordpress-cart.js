@@ -16,7 +16,13 @@ const WordpressCart = () => {
     }
     CartService.wordpressAddToCart(data)
       .then((res) => {
+        console.log(res, "ress okayyy");
         if (res && res.status === 200) {
+          // alert("okay it's done");
+          toast.success("Course added successfully in cart");
+          return router.push("/cart");
+        } else if (res.status === 409) {
+          toast.error(res.data.message);
           return router.push("/cart");
         }
       })
@@ -45,10 +51,12 @@ const WordpressCart = () => {
   function onClicked() {}
 
   return (
-    <div>
-      <button onClick={onClicked}>Click to add to cart</button>
-      <ToastContainer autoClose={1000} />
-    </div>
+    <>
+      <ToastContainer autoClose={2000} />
+    </>
+    // <div>
+    //   <button onClick={onClicked}>Click to add to cart</button>
+    // </div>
   );
 };
 
