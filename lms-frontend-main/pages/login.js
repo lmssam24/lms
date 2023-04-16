@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageBanner from "../src/components/PageBanner";
 import Layout from "../src/layout/Layout";
 import Router from "next/router";
@@ -20,6 +20,8 @@ const Login = () => {
     username: "",
     password: ""
   });
+
+  const [browserdata, setBrwowserData] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +66,7 @@ const Login = () => {
         .then((res) => {
           if (res && res.status === 200) {
             toast.success("Course added successfully in cart");
-            // return router.push("/cart");
+            return router.push("/cart");
           } else if (res.status === 409) {
             toast.error(res.data.message);
             return router.push("/cart");
@@ -75,6 +77,20 @@ const Login = () => {
         });
     }
   };
+
+  useEffect(() => {
+    if (browserdata) {
+      const url = new URL(window.location.href);
+      if (url.search.length > 0) {
+        var searchParams = url.searchParams;
+        var title = searchParams?.get("title");
+        var price = searchParams?.get("price");
+        var mysql_id = searchParams?.get("mysql_id");
+        manageData(title, price, mysql_id);
+        Router.push("/faculty");
+      }
+    }
+  }, [browserdata]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -93,20 +109,14 @@ const Login = () => {
         // console.log("response====", response)
         if (response.status === 200) {
           Cookies.set("loggedIn", true);
+          setBrwowserData(Cookies.get("loggedIn"));
           // if(response.data && response.data.type === "teacher"){
           Cookies.set("type", response.data.type);
           Cookies.set("admin", response.data.admin);
-
           const url = new URL(window.location.href);
-          if (url.search.length > 0) {
-            var searchParams = url.searchParams;
-            var title = searchParams?.get("title");
-            var price = searchParams?.get("price");
-            var mysql_id = searchParams?.get("mysql_id");
-            manageData(title, price, mysql_id);
+          if (url.search.length === 0) {
+            Router.push("/faculty");
           }
-          Router.push("/faculty");
-
           // }
         } else if (response.response.status === 403) {
           toast.error(`Error: ${response.response.data.message}`);

@@ -194,49 +194,49 @@ class DoCheckout(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.data['user'] = request.user.id
-        transaction_id = uuid.uuid4()
-        request.data['id'] = transaction_id
-        transaction_info_serializer = TransactionCreate(data=request.data)
-        if transaction_info_serializer.is_valid():
-            data = request.data
-            data['transaction_id'] = transaction_id
-            cc_data = build_cc_avenue_params(data)
-            plainText = ''
-            for j in cc_data:
-                plainText += "%s=%s&" % (j, cc_data[j])
-            plainText += "cancel_url=%s&" % (cc_avenue_cancel_url+"?app_code="+encrypt_text(
-                json.dumps({"transaction_id": str(transaction_id), "success": False})))
-            plainText += "redirect_url=%s&" % (cc_avenue_redirect_url+"?app_code="+encrypt_text(
-                json.dumps({"transaction_id": str(transaction_id), "success": True})))
-            encrypted_data = cc_avenue_encrypt(plainText)
-
-            payment_url = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=%s&access_code=%s' % (
-                encrypted_data, settings.CC_AVENUE_ACCESS_CODE)
-            data['request'] = encrypted_data
-            transaction_info_serializer = TransactionCreate(data=data)
+        try:
+            request.data['user'] = request.user.id
+            transaction_id = uuid.uuid4()
+            request.data['id'] = transaction_id
+            transaction_info_serializer = TransactionCreate(data=request.data)
             if transaction_info_serializer.is_valid():
-                transaction_info_serializer.save()
-                order_items = []
-                courses_enroll = []
-                for p in data['cart']:
-                    order_items.append(
-                        {"user": request.user.id, "order_id": transaction_id, "product_id": p['product']['course']['id']})
-                    courses_enroll.append(
-                        {"student_id": Student.objects.get(user__id=request.user.id), "course_id": p['product']['course']['id'], "teacher_id": p['product']['course']['teacher']})
-                order_items_serializer = OrderItems(
-                    data=order_items, many=True)
-                enroll_student_serializer = StudentCourseSerializer(
-                    data=courses_enroll, many=True)
+                data = request.data
+                data['transaction_id'] = transaction_id
+                cc_data = build_cc_avenue_params(data)
+                plainText = ''
+                for j in cc_data:
+                    plainText += "%s=%s&" % (j, cc_data[j])
+                plainText += "cancel_url=%s&" % (cc_avenue_cancel_url+"?app_code="+encrypt_text(
+                    json.dumps({"transaction_id": str(transaction_id), "success": False})))
+                plainText += "redirect_url=%s&" % (cc_avenue_redirect_url+"?app_code="+encrypt_text(
+                    json.dumps({"transaction_id": str(transaction_id), "success": True})))
+                encrypted_data = cc_avenue_encrypt(plainText)
 
-                if order_items_serializer.is_valid():
-                    order_items_serializer.save()
-                    enroll_student_serializer.save()
-                    return Response({"message": "Success", "payment_url": payment_url}, status=200)
-                else:
-                    return Response({"message": "Invalid Data1", "error": order_items_serializer.errors}, status=400)
-        else:
-            return Response({"message": "Invalid Data2", "error": transaction_info_serializer.errors}, status=400)
+                payment_url = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=%s&access_code=%s' % (
+                    encrypted_data, settings.CC_AVENUE_ACCESS_CODE)
+                data['request'] = encrypted_data
+                transaction_info_serializer = TransactionCreate(data=data)
+                if transaction_info_serializer.is_valid():
+                    transaction_info_serializer.save()
+                    order_items = []
+
+                    for p in data['cart']:
+                        order_items.append(
+                            {"user": request.user.id, "order_id": transaction_id, "product_id": p['product']['course']['id']})
+
+                    order_items_serializer = OrderItems(
+                        data=order_items, many=True)
+
+                    if order_items_serializer.is_valid():
+                        order_items_serializer.save()
+
+                        return Response({"message": "Success", "payment_url": payment_url}, status=200)
+                    else:
+                        return Response({"message": "Invalid Data1", "error": order_items_serializer.errors}, status=400)
+            else:
+                return Response({"message": "Invalid Data2", "error": transaction_info_serializer.errors}, status=400)
+        except Exception as err:
+            print(err)
 
 
 class ValidatingTransaction(APIView):
@@ -256,7 +256,7 @@ class ValidatingTransaction(APIView):
             student_course = list()
             for order in orders:
                 student_course.append(
-                    {"course": order['product_id_id'], "student": order['user_id']})
+                    {"course": CourseDetails.objects.get(id=order["product_id"]).course.id, "student": Student.objects.get(user__id=order['user_id']).id, "teacher": CourseDetails.objects.get(id=order["product_id"]).course.teacher.id})
 
             student_course = StudentCourseSerializer(
                 data=student_course, many=True)

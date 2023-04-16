@@ -47,15 +47,32 @@ const MobileHeader = ({ cartcount }) => {
         </div>
       </li> */}
       <li>
-        <Link href="/">Home</Link>
+        <Link href="https://educationnest.com/">Home</Link>
       </li>
       {/* <li>
         <Link href="/about">About</Link>
       </li> */}
 
       <li>
-        <Link href="/course-grid">Courses</Link>
+        <Link href="https://educationnest.com/courses/">All Courses</Link>
       </li>
+
+      <li>
+        <Link href="https://community.educationnest.com/">
+          <a>Knowledge Base</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="https://community.educationnest.com/forums/">
+          <a>Forum</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="https://community.educationnest.com/our-vacancies-all-jobs/">
+          <a>Job Portal</a>
+        </Link>
+      </li>
+
       {/* <li>
         <Link href="/purchase">Purchase</Link>
       </li> */}

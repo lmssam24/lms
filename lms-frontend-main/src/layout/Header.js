@@ -260,7 +260,7 @@ const Menus = () => {
   return (
     <ul className="navigation clearfix d-none d-lg-flex">
       <li>
-        <Link href="/">
+        <Link href="https://educationnest.com/">
           <a>Home</a>
         </Link>
       </li>
@@ -269,9 +269,25 @@ const Menus = () => {
             <a>About</a>
           </Link>
         </li> */}
+      {/* /course-grid */}
       <li>
-        <Link href="/course-grid">
-          <a>courses</a>
+        <Link href="https://educationnest.com/courses/">
+          <a>All Courses</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="https://community.educationnest.com/">
+          <a>Knowledge Base</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="https://community.educationnest.com/forums/">
+          <a>Forum</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="https://community.educationnest.com/our-vacancies-all-jobs/">
+          <a>Job Portal</a>
         </Link>
       </li>
       {/* <li>
